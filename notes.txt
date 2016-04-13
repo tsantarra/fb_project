@@ -1,0 +1,25 @@
+
+
+Goals:
+    - Switch between video feeds in real time according to streamed live data
+        + Calculate features in real time for the following data sources
+            * Video
+                - Faces
+                - Movement
+                - Group dynamics?
+            * Audio
+                - Single source without orientation?
+                - Single source with orientation (Kinect)
+                - Multiple sources
+            * Supplementary info
+                - Roster of participants
+                - Presentation surfaces (tv, screen, whiteboard, table)
+        + Tie in transition styles from cinematography
+            * HMM? Parameters:
+                - Prior over shots (can fix to uniform or bias by hand)
+                - Probability of event (emission) given a shot (the target active shot) [Not sure this fits our project]
+                - Probability of shot given previous shot
+
+
+What about an ensemble predictor?
+
