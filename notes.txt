@@ -21,5 +21,6 @@ Goals:
                 - Probability of shot given previous shot
 
 
-What about an ensemble predictor?
-
+something like: ffmpeg -i video.avi -i audio.mp3 -codec copy -shortest output.avi
+which merges the two streams, copying them, into one output
+the shortest flag just says the output should be as long as the shortest of the inputs
