@@ -1,4 +1,4 @@
-from __future__ import print_function
+#from __future__ import print_function
 import wave
 import struct
 import cv2
@@ -34,7 +34,7 @@ def apply_max_filter_reduced_fps(wav_frames, audio_fps, video_fps):
         if i % tick == 0:
             print('=', end='')
         start = int((i * 1.0 / video_fps) * audio_fps)
-        end = start + block_length
+        end = int(start + block_length)
         new_frames += [max(wav_frames[start:end])]
         i += 1
     print('')
@@ -69,7 +69,7 @@ def get_highlight_frames(vid_wav_pairs):
     highlight_frames = []
 
     # For each frame, check which audio had highest max, add that video
-    for i in xrange(len(all_wav_frames[0][1])):
+    for i in range(len(all_wav_frames[0][1])):
         max_vid_filename = max([(x[1][i], x[0]) for x in all_wav_frames])[1]
         highlight_frames += [(i, max_vid_filename)]
 
