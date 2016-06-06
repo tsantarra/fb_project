@@ -1,4 +1,3 @@
-#from __future__ import print_function
 import wave
 import struct
 import cv2
