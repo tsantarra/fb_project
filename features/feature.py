@@ -8,5 +8,5 @@ class Feature(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def tick(self):
+    def update(self):
         pass

@@ -87,3 +87,8 @@ class Distribution(OrderedDict):
 
     def __lt__(self, other):
         return self.__key() < other.__key()
+
+    @staticmethod
+    def uniform(items):
+        probability_per_item = 1.0/len(items)
+        return Distribution({item: probability_per_item for item in items})

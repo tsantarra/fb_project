@@ -1,59 +1,111 @@
 import wave
 import struct
 import cv2
+import sounddevice as sd
 
 
-def get_wav_frames_from_file(filename):
-    """ Returns a wav file as an array """
-    wave_file = wave.open(filename, 'r')
-
-    length = wave_file.getnframes()
-    for _ in range(0, length):
-        wave_data = wave_file.readframes(1)
-        data = struct.unpack("<h", wave_data)
-        yield int(data[0])
-
-    wave_file.close()
-
-
-# STREAMING AUDIO
-# https://people.csail.mit.edu/hubert/pyaudio/docs/#pyaudio-documentation
-# http://people.csail.mit.edu/hubert/pyaudio/     -> see "record" example
-# http://stackoverflow.com/questions/4160175/detect-tap-with-pyaudio-from-live-mic/4160733#4160733
-
-# http://python-sounddevice.readthedocs.io/en/0.3.3/#device-selection
-
-# What sounddevice is based on: https://github.com/bastibe/PySoundCard/
-
-
-def get_audio_from_stream():
-    """ This appear to fit the desired generator style well!"""
-    import sounddevice as sd
-    with sd.InputStream(device=0, channels=1, latency='low') as stream:
-        while True:  # Need break case
-            data, flag = stream.read(stream.read_available)
-            yield data
-
-
-
-def get_video_frames_from_file(vid_filename):
-    cap = cv2.VideoCapture(vid_filename)
+def get_camera_list():
+    id = 0
+    cam_list = []
 
     while True:
-        ret, frame = cap.read()
-        if ret:
-            yield frame
+        stream = cv2.VideoCapture(id)
+        if stream.isOpened():
+            stream.release()
+            cam_list.append(id)
+            id += 1
         else:
             break
 
+    return cam_list
 
-def get_video_frames_from_stream(device_id=0):
-    cap = cv2.VideoCapture(device_id)
 
-    while True:
-        ret, frame = cap.read()
-        if ret:
-            yield frame
-        else:
-            cap.release()
-            break
+class DataSource:
+
+    def update(self):
+        """ Capture the next frame of data. """
+        raise NotImplementedError
+
+    def read(self):
+        """ Return the latest frame of data. """
+        raise NotImplementedError
+
+
+class VideoStream(DataSource):
+
+    def __init__(self, id):
+        self.stream = cv2.VideoCapture(id)
+        self.last_frame = None
+        self.status = self.stream.isOpened()
+
+    def update(self):
+        self.status, self.last_frame = self.stream.read()
+
+    def read(self):
+        return self.last_frame
+
+    def __del__(self):
+        self.stream.release()
+
+
+class VideoFile(DataSource):
+
+    def __init__(self, filename):
+        self.stream = cv2.VideoCapture(filename)
+        self.last_frame = None
+        self.status = self.stream.isOpened()
+
+    def update(self):
+        self.status, self.last_frame = self.stream.read()
+
+    def read(self):
+        return self.last_frame
+
+    def __del__(self):
+        self.stream.release()
+
+
+class AudioStream(DataSource):
+
+    def __init__(self, id):
+        self.stream = sd.InputStream(device=id, channels=1, latency='low')
+        self.last_frame = None
+        self.status = self.stream.active
+        self.flag = None
+
+    def update(self):
+        self.last_frame, self.flag = self.stream.read(self.stream.read_available)
+        self.status = self.stream.active
+
+    def read(self):
+        return self.last_frame
+
+    def __del__(self):
+        self.stream.close()
+
+
+class AudioFile(DataSource):
+
+    def __init__(self, filename):
+        self.stream = wave.open(filename, 'r')
+        self.last_frame = None
+        self.status = None
+        self.file_length = self.stream.getnframes()
+        self.position = 0
+
+    def update(self):
+        if self.position > self.file_length:
+            self.last_frame = None
+            return
+
+        raw_data = self.stream.readframes(1)
+        self.last_frame = int(struct.unpack("<h", raw_data)[0])
+        self.position += 1
+
+    def read(self):
+        return self.last_frame
+
+    def __del__(self):
+        self.stream.close()
+
+
