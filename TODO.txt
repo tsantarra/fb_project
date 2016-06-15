@@ -1,4 +1,7 @@
 
+Tie sources together (audio + video)
+Output recording and display
+Audio switching feature
 
 Continue refactoring Michael's code to fit the eventual abstract framework of the ensemble system.
     - Reduce repetitive code

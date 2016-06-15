@@ -2,6 +2,7 @@ import wave
 import struct
 import cv2
 import sounddevice as sd
+import logging
 
 
 def get_camera_list():
@@ -68,19 +69,23 @@ class VideoFile(DataSource):
 class AudioStream(DataSource):
 
     def __init__(self, id):
+        self.id = id
         self.stream = sd.InputStream(device=id, channels=1, latency='low')
+        self.stream.start()
         self.last_frame = None
         self.status = self.stream.active
         self.flag = None
 
     def update(self):
         self.last_frame, self.flag = self.stream.read(self.stream.read_available)
+        logging.debug('Audio stream: ' + str(self.id) + '\t' + str(self.last_frame))
         self.status = self.stream.active
 
     def read(self):
         return self.last_frame
 
     def __del__(self):
+        self.stream.stop()
         self.stream.close()
 
 

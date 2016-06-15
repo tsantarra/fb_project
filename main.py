@@ -6,6 +6,7 @@ import time
 import argparse  # eventual command line parsing   https://docs.python.org/3.5/library/argparse.html
 
 from data_sources import *
+from features.audio_feature import AudioFeature
 import cv2
 
 
@@ -14,14 +15,15 @@ def init():
     video_stream_list = get_camera_list()
     video_sources = [VideoStream(id) for id in video_stream_list]
 
-    audio_stream_list = []
+    audio_stream_list = [1,2]
+    audio_sources = [AudioStream(id) for id in audio_stream_list]
 
-    features = []
+    features = [AudioFeature(zip(audio_sources, video_sources))]
 
-    return video_sources, features
+    return video_sources+audio_sources, features
 
 
-def tick(sources, features):
+def tick(sources, features, output=None):
     """
         The meat of the system runs via this tick function. All sources and feature calculators should update (hopefully
         keeping in sync. The computation of selecting a primary stream then occurs. It is yet unclear if output writing
@@ -41,9 +43,12 @@ def tick(sources, features):
 
     # Testing video stream. Not permanent code.
     for id, source in enumerate(sources):
-        next_bit = next(source)
-        cv2.imshow(str(id), next_bit)
-        cv2.waitKey(1)
+        next_bit = source.read()
+        if id < 2:
+            cv2.imshow(str(id), next_bit)
+            cv2.waitKey(1)
+        elif id == 2:  # CANNOT WRITE TWICE AS MUCH AS NEEDED
+            output.write(next_bit)
 
 
 if __name__ == '__main__':
@@ -67,10 +72,13 @@ if __name__ == '__main__':
             action(*action_args)
 
 
+        output_stream = sd.OutputStream(device=4, channels=1, samplerate=44100, latency='low')
+        output_stream.start()
         system = sched.scheduler(time.time, time.sleep)
-        periodic(scheduler=system, interval=0.01, action=tick, action_args=(sources, features))
+        periodic(scheduler=system, interval=0.01, action=tick, action_args=(sources, features, output_stream))
 
         system.run()
+        output_stream.close()
 
     except KeyboardInterrupt:
         print('ctrl-c, leaving ...')

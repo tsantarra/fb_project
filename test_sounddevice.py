@@ -65,7 +65,7 @@ def yield_func():
 if __name__ == '__main__':
     import sounddevice as sd
 
-    with sd.OutputStream(device=8, channels=max(args.channels),
+    with sd.OutputStream(device=4, channels=max(args.channels),
                                    samplerate=args.samplerate, latency='low') as output_stream:
         for i, block in enumerate(yield_func()):
             if i > 100000:
