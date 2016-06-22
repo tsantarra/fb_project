@@ -2,7 +2,7 @@ from random import uniform
 from collections import OrderedDict
 
 
-class Distribution(OrderedDict):
+class Distribution(dict):
     """ A distribution of items and their associated probabilities. """
 
     def __init__(self, args=None):
@@ -43,13 +43,28 @@ class Distribution(OrderedDict):
 
         return new_dist.normalize()
 
+    def add_distribution(self, other_distribution):
+        """
+        Given a set of conditional probabilities, the distribution updates itself via Bayes' rule.
+        """
+        assert self.keys() == other_distribution.keys(), \
+            'Conditional probabilities keys do not map to distribution.\n' + \
+            str(set(other_distribution.keys())) + ' != ' + str(self.keys())
+
+        new_dist = Distribution(self.copy())
+
+        for key in other_distribution:
+            new_dist[key] += other_distribution[key]
+
+        return new_dist
+
     def normalize(self):
         """
         Normalizes the distribution such that all probabilities sum to 1.
         """
         total = sum(self.values())
 
-        assert total > 0, 'State distribution probability total = 0.'
+        assert total > 0, 'Distribution probability total = 0.'
 
         for item in self.keys():
             self[item] /= total
@@ -58,7 +73,7 @@ class Distribution(OrderedDict):
 
     def sample(self):
         """
-        Returns a state probabilistically selected from the distribution.
+        Returns a probabilistically selected item from the distribution.
         """
         target = uniform(0, sum(self.values()))  # Corrected to sum of probabilities for non-normalized distributions.
         cumulative = 0
@@ -78,15 +93,6 @@ class Distribution(OrderedDict):
     def __missing__(self, key):
         self[key] = 0.0
         return 0.0
-
-    def __key(self):
-        return tuple(self.items())
-
-    def __hash__(self):
-        return hash(self.__key())
-
-    def __lt__(self, other):
-        return self.__key() < other.__key()
 
     @staticmethod
     def uniform(items):

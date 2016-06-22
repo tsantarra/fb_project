@@ -1,14 +1,9 @@
 from distribution import Distribution
 from collections import deque, Counter
+import cv2
 
 
-def reduce_audio_frames(frames):
-    """ I believe the format is list of frames, each of which has a value per channel
-    """
-    return max(max(data) for data in frames)
-
-
-class AudioFeature:
+class VideoMovementFeature:
 
     def __init__(self, audio_video_pairs, window_length=10, thrash_limit=3):
         self.window_length = window_length
@@ -17,6 +12,7 @@ class AudioFeature:
         self.window = deque()
         self.last_selected = None
         self.time_since_switch = 0
+        self.last_frames = []
 
     def weight_sources(self):
         # Examination of sliding window
@@ -35,12 +31,26 @@ class AudioFeature:
         return vote
 
     def update(self):
+        # Initial conditions
+        if not self.last_frames:
+            self.last_frames = [video.read() for audio, video in self.sources]
+            self.window.append(self.sources[0])
+            return
+
         # Progress tracking vars
         if len(self.window) > self.window_length:
             self.window.popleft()
         self.time_since_switch += 1
 
-        # Append max source
-        self.window.append(max(self.sources, key=lambda av: reduce_audio_frames(av[0].read())))
+        # Process new frames
+        new_frames = [video.read() for audio, video in self.sources]
+        diffs = [cv2.absdiff(new, old) for new, old in zip(new_frames, self.last_frames)]
+        diffs = [cv2.threshold(frame, 25, 255, cv2.THRESH_BINARY) for frame in diffs]
+        diffs = [frame.sum() for _, frame in diffs]
+        max_index = diffs.index(max(diffs))
+
+        # Update vars
+        self.last_frames = new_frames
+        self.window.append(self.sources[max_index])
 
 

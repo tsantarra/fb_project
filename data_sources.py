@@ -6,6 +6,10 @@ import logging
 
 
 def get_camera_list():
+    """ Unfortunately, it seems that OpenCV does not provide a way to acquire a
+        list of active devices. There is likely a better way than iterating through
+        possible device IDs and trying each.
+    """
     id = 0
     cam_list = []
 
@@ -78,7 +82,6 @@ class AudioStream(DataSource):
 
     def update(self):
         self.last_frame, self.flag = self.stream.read(self.stream.read_available)
-        logging.debug('Audio stream: ' + str(self.id) + '\t' + str(self.last_frame))
         self.status = self.stream.active
 
     def read(self):
@@ -91,21 +94,22 @@ class AudioStream(DataSource):
 
 class AudioFile(DataSource):
 
-    def __init__(self, filename):
+    def __init__(self, filename, frames_per_tick=1):
         self.stream = wave.open(filename, 'r')
         self.last_frame = None
         self.status = None
         self.file_length = self.stream.getnframes()
         self.position = 0
+        self.frames_per_tick = frames_per_tick
 
     def update(self):
         if self.position > self.file_length:
             self.last_frame = None
             return
 
-        raw_data = self.stream.readframes(1)
+        raw_data = self.stream.readframes(self.frames_per_tick)
         self.last_frame = int(struct.unpack("<h", raw_data)[0])
-        self.position += 1
+        self.position += self.frames_per_tick
 
     def read(self):
         return self.last_frame
