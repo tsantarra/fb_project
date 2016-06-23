@@ -1,6 +1,6 @@
-from distribution import Distribution
 from collections import deque, Counter
 import cv2
+from features.distribution import Distribution
 
 
 class VideoMovementFeature:

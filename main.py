@@ -1,19 +1,17 @@
-import logging
-import sys
-import traceback
-import sched
-import time
-import configparser
 import ast
-
+import configparser
+import logging
+import sched
+import sys
+import time
+import traceback
 import cv2
-import sounddevice
 
-from data_sources import VideoStream, AudioStream, VideoFile, AudioFile
-from output import OutputVideoStream, OutputAudioStream
 from features.audio_feature import AudioFeature
+from features.distribution import Distribution
 from features.video_movement_feature import VideoMovementFeature
-from distribution import Distribution
+from io.data_sources import VideoStream, AudioStream, VideoFile
+from io.output import OutputVideoStream, OutputAudioStream
 
 
 def parse_config_settings():

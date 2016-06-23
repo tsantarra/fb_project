@@ -1,5 +1,5 @@
-from distribution import Distribution
 from collections import deque, Counter
+from features.distribution import Distribution
 
 
 def reduce_audio_frames(frames):

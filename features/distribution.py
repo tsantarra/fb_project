@@ -1,5 +1,4 @@
 from random import uniform
-from collections import OrderedDict
 
 
 class Distribution(dict):
