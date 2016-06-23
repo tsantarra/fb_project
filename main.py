@@ -10,8 +10,8 @@ import cv2
 from features.audio_feature import AudioFeature
 from features.distribution import Distribution
 from features.video_movement_feature import VideoMovementFeature
-from io.data_sources import VideoStream, AudioStream, VideoFile
-from io.output import OutputVideoStream, OutputAudioStream
+from io_sources.data_sources import VideoStream, AudioStream, VideoFile
+from io_sources.output import OutputVideoStream, OutputAudioStream
 
 
 def parse_config_settings():

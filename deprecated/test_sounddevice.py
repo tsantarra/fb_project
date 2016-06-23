@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Example from: http://python-sounddevice.readthedocs.io/en/0.3.3/examples.html
+Example from: http://python-sounddevice.readthedocs.io_sources/en/0.3.3/examples.html
 
 """
 

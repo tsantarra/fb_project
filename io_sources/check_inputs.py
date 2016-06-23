@@ -1,5 +1,5 @@
 import sounddevice
-from io.data_sources import get_camera_list
+from io_sources.data_sources import get_camera_list
 
 if __name__ == '__main__':
     print('Audio devices:\n', sounddevice.query_devices())
