@@ -5,7 +5,7 @@ from features.distribution import Distribution
 def reduce_audio_frames(frames):
     """ I believe the format is list of frames, each of which has a value per channel
     """
-    return max(max(data) for data in frames)
+    return max((max(data, default=0) for data in frames), default=0)
 
 
 class AudioFeature:

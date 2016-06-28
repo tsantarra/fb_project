@@ -5,26 +5,6 @@ import sounddevice as sd
 import logging
 
 
-def get_camera_list():
-    """ Unfortunately, it seems that OpenCV does not provide a way to acquire a
-        list of active devices. There is likely a better way than iterating through
-        possible device IDs and trying each.
-    """
-    id = 0
-    cam_list = []
-
-    while True:
-        stream = cv2.VideoCapture(id)
-        if stream.isOpened():
-            stream.release()
-            cam_list.append(id)
-            id += 1
-        else:
-            break
-
-    return cam_list
-
-
 class DataSource:
 
     def update(self):
@@ -45,6 +25,7 @@ class VideoStream(DataSource):
 
     def update(self):
         self.status, self.last_frame = self.stream.read()
+        logging.debug('VideoStream.status: ' + str(self.status))
 
     def read(self):
         return self.last_frame
@@ -88,7 +69,6 @@ class AudioStream(DataSource):
         return self.last_frame
 
     def __del__(self):
-        self.stream.stop()
         self.stream.close()
 
 

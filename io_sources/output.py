@@ -1,11 +1,16 @@
 import cv2
 import sounddevice
+import soundfile
 import wave
 import subprocess
+import struct
 
 
 class Output:
     def write(self, data):
+        raise NotImplementedError
+
+    def close(self):
         raise NotImplementedError
 
 
@@ -17,6 +22,9 @@ class OutputVideoStream(Output):
         cv2.imshow(self.id, data)
         cv2.waitKey(1)
 
+    def close(self):
+        pass
+
 
 class OutputAudioStream(Output):
     def __init__(self, device_id, channels=1, samplerate=44100, latency='low' ):
@@ -26,36 +34,33 @@ class OutputAudioStream(Output):
     def write(self, data):
         self.stream.write(data)
 
-    def __del__(self):
+    def close(self):
         self.stream.close()
 
 
 class OutputVideoFile(Output):
-    def __init__(self, filename, video_fps, dimensions):
-        self.stream = cv2.VideoWriter(filename, cv2.VideoWriter_fourcc(*'DIVX'), video_fps, dimensions)
+    def __init__(self, filename, video_fps=20, dimensions=(640, 480)):
+        self.stream = cv2.VideoWriter(filename, cv2.VideoWriter_fourcc(*'XVID'), video_fps, dimensions)
+        self.filename = filename
 
     def write(self, data):
         self.stream.write(data)
 
-    def __del__(self):
+    def close(self):
         self.stream.release()
 
 
 class OutputAudioFile(Output):
-    def __init__(self, filename):
-        self.filename = filename
-        self.data = []
+    def __init__(self, filename, samplerate=44100, channels=1, subtype='PCM_24'):
+        self.output_stream = soundfile.SoundFile(filename, mode='w', samplerate=samplerate,
+                                 channels=channels, subtype=subtype)
 
     def write(self, data):
-        self.data.extend(data)
+        self.output_stream.write(data)
 
-    def __del__(self):
-        wave_file = wave.open(self.filename, 'w')
-        wave_file.setnframes(len(self.data))
-        wave_file.setframerate(44100)
-        wave_file.setnchannels(len(self.data[0]))
-        wave_file.writeframes(self.data)
-        wave_file.close()
+    def close(self):
+        self.output_stream.close()
+        return
 
 
 def join_audio_and_video(audio_filename, video_filename):
