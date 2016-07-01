@@ -21,6 +21,7 @@ class OutputVideoStream(Output):
     def write(self, data):
         if data is not None:
             cv2.imshow(self.id, data)
+            cv2.waitKey(1)
 
     def close(self):
         pass

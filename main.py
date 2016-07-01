@@ -14,9 +14,9 @@ from features.distribution import Distribution
 from features.video_movement_feature import VideoMovementFeature
 from io_sources.data_sources import VideoStream, AudioStream, VideoFile
 from io_sources.output import OutputVideoStream, OutputAudioStream, OutputAudioFile, OutputVideoFile
+from schedule import create_periodic_event
 
 from collections import namedtuple
-
 MediaStreams = namedtuple("MediaStreams", ["audio", "video"])
 
 
@@ -107,24 +107,9 @@ def tick(sources, features, output_streams):
             cv2.imshow(str(i), source.read())
 
 
-def periodic(scheduler, interval, action, action_args=()):
-    """ This design pattern schedules the next scheduling event, then separately executes the desired action. The
-        reason for this is that we desire an arbitrarily long series of repeated loops rather than a finite series
-        of events that would be scheduled all up front.
-    """
-    # Check for exit command
-    if cv2.waitKey(10) == 27:
-        for event in scheduler.queue:
-            scheduler.cancel(event)
-        cv2.destroyAllWindows()
-        return
-
-    # Schedule next action
-    scheduler.enter(delay=interval, priority=1, action=periodic,
-                    argument=(scheduler, interval, action, action_args))
-
-    # Perform action with specified args
-    action(*action_args)
+def halt_criteria():
+    """ This function provides the necessary check for terminating the system loop. """
+    return cv2.waitKey(10) == 27
 
 
 if __name__ == '__main__':
@@ -135,11 +120,14 @@ if __name__ == '__main__':
         sources, features, output_streams, params = init()
 
         # Initialize scheduler and set to repeat calls indefinitely
-        system = sched.scheduler(time.time, time.sleep)
-        periodic(scheduler=system, interval=0.01, action=tick, action_args=(sources, features, output_streams))
+        system = create_periodic_event(interval=0.01, action=tick,
+                                       action_args=(sources, features, output_streams), halt_check=halt_criteria)
 
         # Execute
         system.run()
+
+        # Kill windows
+        cv2.destroyAllWindows()
 
         # Close output streams
         for output in output_streams.audio + output_streams.video:

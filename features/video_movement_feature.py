@@ -44,13 +44,6 @@ class VideoMovementFeature:
 
         # Process new frames
         new_frames = {source: source[1].read() for source in self.sources}
-        if False:
-            for source in self.sources:
-                frame = source[1].read()
-                if frame is None:
-                    new_frames[source] = self.last_frames[source]
-                else:
-                    new_frames[source] = frame
 
         diffs = {source: cv2.absdiff(new_frames[source], self.last_frames[source]) for source in new_frames
                  if (new_frames[source] is not None and self.last_frames[source] is not None)}

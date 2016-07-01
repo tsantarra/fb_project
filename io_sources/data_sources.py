@@ -6,7 +6,7 @@ import logging
 import numpy
 
 from multiprocessing import Process, Queue
-from schedule import create_periodic_event, periodic
+from schedule import create_periodic_event
 
 
 class DataSource:
@@ -24,8 +24,8 @@ class DataSource:
 ########################################      AUDIO     ###################################################
 ###########################################################################################################
 
-def stream_audio(id, queue):
-    stream = sounddevice.InputStream(device=id, channels=1, latency='low')
+def stream_audio(device_id, queue, interval=0.001):
+    stream = sounddevice.InputStream(device=device_id, channels=1, latency='low')
     stream.start()
 
     def grab_audio_frames(queue, stream):
@@ -38,14 +38,15 @@ def stream_audio(id, queue):
 
 class AudioStream:
 
-    def __init__(self, id):
-        self.id = id
+    def __init__(self, device_id, input_interval=0.001):
+        self.id = device_id
+        self.interval = input_interval
         self.last_frame = []
         self.status = True
         self.flag = None
 
         self.queue = Queue()
-        self.process = Process(target=stream_audio, args=(id, self.queue))
+        self.process = Process(target=stream_audio, args=(device_id, self.queue, input_interval))
         self.process.start()
 
     def update(self):
@@ -67,25 +68,48 @@ class AudioStream:
         self.process.terminate()
 
 
-class AudioStreamSequential(DataSource):
+###########################################################################################################
+########################################      VIDEO     ###################################################
+###########################################################################################################
 
-    def __init__(self, id):
-        self.id = id
-        self.stream = sounddevice.InputStream(device=id, channels=1, latency='low')
-        self.stream.start()
+
+def stream_video(device_id, queue, interval=0.015):
+    stream = cv2.VideoCapture(device_id)
+
+    def grab_video_frame(queue, stream):
+        status, frame = stream.read()
+        queue.put((status, frame))
+
+    scheduler = create_periodic_event(interval=interval, action=grab_video_frame, action_args=(queue, stream))
+    scheduler.run()
+
+
+class VideoStream:
+
+    def __init__(self, device_id, input_interval=0.015):
+        self.id = device_id
+        self.interval = input_interval
+        self.status = False
         self.last_frame = None
-        self.status = self.stream.active
-        self.flag = None
+
+        self.queue = Queue(maxsize=1)
+        self.process = Process(target=stream_video, args=(device_id, self.queue, input_interval))
+        self.process.start()
 
     def update(self):
-        self.last_frame, self.flag = self.stream.read(self.stream.read_available)
-        self.status = self.stream.active
+        if not self.queue.empty():
+            self.status, self.last_frame = self.queue.get()
 
     def read(self):
         return self.last_frame
 
     def __del__(self):
-        self.stream.close()
+        self.process.terminate()
+
+
+###########################################################################################################
+########################################      FILES     ###################################################
+###########################################################################################################
 
 
 class AudioFile(DataSource):
@@ -112,60 +136,6 @@ class AudioFile(DataSource):
 
     def __del__(self):
         self.stream.close()
-
-###########################################################################################################
-########################################      VIDEO     ###################################################
-###########################################################################################################
-
-
-def stream_video(vid_id, queue):
-    stream = cv2.VideoCapture(vid_id)
-
-    def grab_video_frame(queue, stream):
-        status, frame = stream.read()
-        queue.put((status, frame))
-
-    scheduler = create_periodic_event(interval=0.015, action=grab_video_frame, action_args=(queue, stream))
-    scheduler.run()
-
-
-class VideoStream:
-
-    def __init__(self, id):
-        self.queue = Queue(maxsize=1)
-        self.process = Process(target=stream_video, args=(id, self.queue))
-        self.status = False
-        self.last_frame = None
-        self.id = id
-        self.process.start()
-
-    def update(self):
-        if not self.queue.empty():
-            self.status, self.last_frame = self.queue.get()
-
-    def read(self):
-        return self.last_frame
-
-    def __del__(self):
-        self.process.terminate()
-
-
-class VideoStreamSequential(DataSource):
-
-    def __init__(self, id):
-        self.stream = cv2.VideoCapture(id)
-        self.last_frame = None
-        self.status = self.stream.isOpened()
-
-    def update(self):
-        self.status, self.last_frame = self.stream.read()
-        logging.debug('VideoStream.status: ' + str(self.status))
-
-    def read(self):
-        return self.last_frame
-
-    def __del__(self):
-        self.stream.release()
 
 
 class VideoFile(DataSource):

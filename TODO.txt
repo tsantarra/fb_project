@@ -1,6 +1,6 @@
 
 Multiprocessing:
-    - separate audio and video processes DONE
+    - run features in independent processes?
     - Setting the interval to a custom rate
     - Writing a file at the end
     - Killing child processes
@@ -8,11 +8,6 @@ Multiprocessing:
 Option to override choice of audio
 Calibration of audio (so sensitive mics don't dominate)
 Weighted features.
-
-Independent scheduling? Asynchronous feed input? -> multiprocess with communication?
-
-Adjust config file to have flexible display options
-
 
 
 

@@ -2,13 +2,6 @@ from collections import deque, Counter
 from features.distribution import Distribution
 
 
-def reduce_audio_frames(frame):
-    """ I believe the format is list of frames, each of which has a value per channel
-    """
-    return max(frame, default=0)
-    #return max((max(data, default=0) for data in frames), default=0)
-
-
 class AudioFeature:
 
     def __init__(self, audio_video_pairs, window_length=10, thrash_limit=3):
@@ -42,6 +35,6 @@ class AudioFeature:
         self.time_since_switch += 1
 
         # Append max source
-        self.window.append(max(self.sources, key=lambda av: reduce_audio_frames(av[0].read())))
+        self.window.append(max(self.sources, key=lambda av: max(av[0].read(), default=0)))
 
 
