@@ -1,8 +1,12 @@
 import wave
 import struct
 import cv2
-import sounddevice as sd
+import sounddevice
 import logging
+import numpy
+
+from multiprocessing import Process, Queue
+from schedule import create_periodic_event, periodic
 
 
 class DataSource:
@@ -16,46 +20,58 @@ class DataSource:
         raise NotImplementedError
 
 
-class VideoStream(DataSource):
+###########################################################################################################
+########################################      AUDIO     ###################################################
+###########################################################################################################
 
-    def __init__(self, id):
-        self.stream = cv2.VideoCapture(id)
-        self.last_frame = None
-        self.status = self.stream.isOpened()
+def stream_audio(id, queue):
+    stream = sounddevice.InputStream(device=id, channels=1, latency='low')
+    stream.start()
 
-    def update(self):
-        self.status, self.last_frame = self.stream.read()
-        logging.debug('VideoStream.status: ' + str(self.status))
+    def grab_audio_frames(queue, stream):
+        frame, flag = stream.read(stream.read_available)
+        queue.put((frame, flag, stream.active))
 
-    def read(self):
-        return self.last_frame
-
-    def __del__(self):
-        self.stream.release()
+    scheduler = create_periodic_event(interval=0.001, action=grab_audio_frames, action_args=(queue, stream))
+    scheduler.run()
 
 
-class VideoFile(DataSource):
-
-    def __init__(self, filename):
-        self.stream = cv2.VideoCapture(filename)
-        self.last_frame = None
-        self.status = self.stream.isOpened()
-
-    def update(self):
-        self.status, self.last_frame = self.stream.read()
-
-    def read(self):
-        return self.last_frame
-
-    def __del__(self):
-        self.stream.release()
-
-
-class AudioStream(DataSource):
+class AudioStream:
 
     def __init__(self, id):
         self.id = id
-        self.stream = sd.InputStream(device=id, channels=1, latency='low')
+        self.last_frame = []
+        self.status = True
+        self.flag = None
+
+        self.queue = Queue()
+        self.process = Process(target=stream_audio, args=(id, self.queue))
+        self.process.start()
+
+    def update(self):
+        frame = None
+        while not self.queue.empty():
+            new_frame, self.flag, self.status = self.queue.get()
+
+            if frame is None:
+                frame = new_frame
+            else:
+                frame = numpy.append(frame, new_frame)
+
+            self.last_frame = frame
+
+    def read(self):
+        return self.last_frame
+
+    def __del__(self):
+        self.process.terminate()
+
+
+class AudioStreamSequential(DataSource):
+
+    def __init__(self, id):
+        self.id = id
+        self.stream = sounddevice.InputStream(device=id, channels=1, latency='low')
         self.stream.start()
         self.last_frame = None
         self.status = self.stream.active
@@ -96,5 +112,78 @@ class AudioFile(DataSource):
 
     def __del__(self):
         self.stream.close()
+
+###########################################################################################################
+########################################      VIDEO     ###################################################
+###########################################################################################################
+
+
+def stream_video(vid_id, queue):
+    stream = cv2.VideoCapture(vid_id)
+
+    def grab_video_frame(queue, stream):
+        status, frame = stream.read()
+        queue.put((status, frame))
+
+    scheduler = create_periodic_event(interval=0.015, action=grab_video_frame, action_args=(queue, stream))
+    scheduler.run()
+
+
+class VideoStream:
+
+    def __init__(self, id):
+        self.queue = Queue(maxsize=1)
+        self.process = Process(target=stream_video, args=(id, self.queue))
+        self.status = False
+        self.last_frame = None
+        self.id = id
+        self.process.start()
+
+    def update(self):
+        if not self.queue.empty():
+            self.status, self.last_frame = self.queue.get()
+
+    def read(self):
+        return self.last_frame
+
+    def __del__(self):
+        self.process.terminate()
+
+
+class VideoStreamSequential(DataSource):
+
+    def __init__(self, id):
+        self.stream = cv2.VideoCapture(id)
+        self.last_frame = None
+        self.status = self.stream.isOpened()
+
+    def update(self):
+        self.status, self.last_frame = self.stream.read()
+        logging.debug('VideoStream.status: ' + str(self.status))
+
+    def read(self):
+        return self.last_frame
+
+    def __del__(self):
+        self.stream.release()
+
+
+class VideoFile(DataSource):
+
+    def __init__(self, filename):
+        self.stream = cv2.VideoCapture(filename)
+        self.last_frame = None
+        self.status = self.stream.isOpened()
+
+    def update(self):
+        self.status, self.last_frame = self.stream.read()
+
+    def read(self):
+        return self.last_frame
+
+    def __del__(self):
+        self.stream.release()
+
+
 
 

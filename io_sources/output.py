@@ -19,20 +19,22 @@ class OutputVideoStream(Output):
         self.id = str(id)
 
     def write(self, data):
-        cv2.imshow(self.id, data)
-        cv2.waitKey(1)
+        if data is not None:
+            cv2.imshow(self.id, data)
 
     def close(self):
         pass
 
 
 class OutputAudioStream(Output):
-    def __init__(self, device_id, channels=1, samplerate=44100, latency='low' ):
-        self.stream = sounddevice.OutputStream(device=device_id, channels=channels, samplerate=samplerate, latency=latency)
+    def __init__(self, device_id, channels=1, samplerate=44100, latency='low'):
+        self.stream = sounddevice.OutputStream(device=device_id, channels=channels, samplerate=samplerate,
+                                               latency=latency)
         self.stream.start()
 
     def write(self, data):
-        self.stream.write(data)
+        if len(data):
+            self.stream.write(data)
 
     def close(self):
         self.stream.close()

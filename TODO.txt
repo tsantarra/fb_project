@@ -1,8 +1,9 @@
 
-Output recording and display to file
-    First: exit command -> escape key.  Note: adding click event prevented process from exiting.
-    Outputs and inputs by type
-    Need to figure out FPS issue!
+Multiprocessing:
+    - separate audio and video processes DONE
+    - Setting the interval to a custom rate
+    - Writing a file at the end
+    - Killing child processes
 
 Option to override choice of audio
 Calibration of audio (so sensitive mics don't dominate)

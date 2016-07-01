@@ -1,979 +1,630 @@
-DEBUG:root:Tick at time 1467074902.273845
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.1065464
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=1.0
 }
-DEBUG:root:Tick at time 1467074902.926911
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.1170623
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=1.0
 }
-DEBUG:root:Tick at time 1467074903.0522256
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.1280797
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=1.0
 }
-DEBUG:root:Tick at time 1467074903.1142962
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.138596
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=1.0
 }
-DEBUG:root:Tick at time 1467074903.1766126
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.1486113
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.1596284
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.170144
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.1856678
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.1996899
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.2097054
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.2207224
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.23224
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.2427564
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.2532723
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.263788
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.2853212
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.2953393
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.3061495
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.3161645
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.3261826
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.336386
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.34639
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.356613
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.3666809
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.3772025
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.3872585
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.3972878
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.4083152
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.41833
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.4293613
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.4403284
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.4503467
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.4608183
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.4718494
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.4819553
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.4924235
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.5029428
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.513427
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.5248795
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.5351903
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.546296
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.5567648
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.5673363
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.5773673
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.5884633
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.6143715
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.6314106
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.6459372
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.6621578
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.6784096
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.693957
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.7084584
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.7239418
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.7394674
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.7550063
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.7719958
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.787079
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.802461
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.8194208
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.834148
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.8506567
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.8656795
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.8814673
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=0.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
+	P=1.0
+}
+DEBUG:root:Tick at time 1467331431.8969915
+DEBUG:root:Vote result:
+Distribution {
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=1.0
+
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=0.0
 }
-DEBUG:root:Tick at time 1467074903.2410908
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.9125152
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=1.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=0.0
 }
-DEBUG:root:Tick at time 1467074903.3172157
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.9275384
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=1.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=0.0
 }
-DEBUG:root:Tick at time 1467074903.3807917
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.9425611
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=1.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=0.0
 }
-DEBUG:root:Tick at time 1467074903.4427454
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.9590895
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=1.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=0.0
 }
-DEBUG:root:Tick at time 1467074903.5053842
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.9751146
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
+	P=1.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=0.0
 }
-DEBUG:root:Tick at time 1467074903.5677655
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
+DEBUG:root:Tick at time 1467331431.9911382
 DEBUG:root:Vote result:
 Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074903.6304417
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074903.6924696
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074903.7555783
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074903.8181646
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074903.8799872
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074903.94319
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.0055532
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.0681553
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.1296842
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.192766
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.2555573
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.3172789
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.3796637
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.4431207
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074904.5056093
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074904.568592
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074904.6310582
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074904.6921873
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074904.7555683
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.8182464
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.8806798
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074904.9427266
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.0056176
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.0672426
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.130116
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.1927552
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.2552383
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.3183858
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.3801427
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.4433024
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.5056007
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.5671601
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.6307178
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.6926866
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.7555645
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
+(<io_sources.data_sources.AudioStream object at 0x0464D450>, <io_sources.data_sources.VideoStream object at 0x04665570>)
 	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.8186135
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.879747
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074905.9433756
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074906.0056236
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074906.0686042
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074906.1302252
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074906.193231
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074906.2555714
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074906.3185258
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.3796754
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.4424486
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.5060694
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.5685825
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.6299274
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.6926305
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.7555535
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.8176427
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.8801322
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074906.9424865
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.0052845
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.0676525
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.1296902
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.1930387
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.2560987
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.3179674
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.380086
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.4424596
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.5058346
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.5676215
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.630358
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.6929245
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074907.75566
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074907.8180919
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074907.8803432
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=1.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=1.0
-}
-DEBUG:root:Tick at time 1467074907.9424474
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074907.9905095
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074908.0526824
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074908.115575
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074908.1771252
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074908.2405617
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074908.3024697
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074908.3645625
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
-
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
-	P=0.0
-}
-DEBUG:root:Tick at time 1467074908.4271536
-DEBUG:root:VideoStream.status: True
-DEBUG:root:VideoStream.status: True
-DEBUG:root:Vote result:
-Distribution {
-(<io_sources.data_sources.AudioStream object at 0x03EDDA50>, <io_sources.data_sources.VideoStream object at 0x03EE9110>)
-	P=2.0
 
-(<io_sources.data_sources.AudioStream object at 0x03EE2130>, <io_sources.data_sources.VideoStream object at 0x03EE91D0>)
+(<io_sources.data_sources.AudioStream object at 0x0434C950>, <io_sources.data_sources.VideoStream object at 0x0464DDB0>)
 	P=0.0
 }

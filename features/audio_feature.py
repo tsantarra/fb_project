@@ -2,10 +2,11 @@ from collections import deque, Counter
 from features.distribution import Distribution
 
 
-def reduce_audio_frames(frames):
+def reduce_audio_frames(frame):
     """ I believe the format is list of frames, each of which has a value per channel
     """
-    return max((max(data, default=0) for data in frames), default=0)
+    return max(frame, default=0)
+    #return max((max(data, default=0) for data in frames), default=0)
 
 
 class AudioFeature:

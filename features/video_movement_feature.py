@@ -33,7 +33,7 @@ class VideoMovementFeature:
     def update(self):
         # Initial conditions
         if not self.last_frames:
-            self.last_frames = [video.read() for audio, video in self.sources]
+            self.last_frames = {source: source[1].read() for source in self.sources}
             self.window.append(self.sources[0])
             return
 
@@ -43,14 +43,24 @@ class VideoMovementFeature:
         self.time_since_switch += 1
 
         # Process new frames
-        new_frames = [video.read() for audio, video in self.sources]
-        diffs = [cv2.absdiff(new, old) for new, old in zip(new_frames, self.last_frames)]
-        diffs = [cv2.threshold(frame, 25, 255, cv2.THRESH_BINARY) for frame in diffs]
-        diffs = [frame.sum() for _, frame in diffs]
-        max_index = diffs.index(max(diffs))
+        new_frames = {source: source[1].read() for source in self.sources}
+        if False:
+            for source in self.sources:
+                frame = source[1].read()
+                if frame is None:
+                    new_frames[source] = self.last_frames[source]
+                else:
+                    new_frames[source] = frame
+
+        diffs = {source: cv2.absdiff(new_frames[source], self.last_frames[source]) for source in new_frames
+                 if (new_frames[source] is not None and self.last_frames[source] is not None)}
+
+        diffs = {source: cv2.threshold(diff, 25, 255, cv2.THRESH_BINARY)[1] for source, diff in diffs.items()}
+        diffs = {source: frame.sum() for source, frame in diffs.items()}
+        max_source = max(diffs, key=lambda source: diffs[source], default=self.sources[0])
 
         # Update vars
+        self.window.append(max_source)
         self.last_frames = new_frames
-        self.window.append(self.sources[max_index])
 
 

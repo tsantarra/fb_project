@@ -9,6 +9,7 @@ import cv2
 import subprocess
 
 from features.audio_feature import AudioFeature
+from features.test_feature import TestFeature
 from features.distribution import Distribution
 from features.video_movement_feature import VideoMovementFeature
 from io_sources.data_sources import VideoStream, AudioStream, VideoFile
@@ -45,8 +46,10 @@ def init():
                           [VideoStream(id) for id in params['VIDEO']['active_camera_ids']])
 
     # Features for selecting a stream
-    features = [VideoMovementFeature(zip(inputs.audio, inputs.video)),
-                AudioFeature(zip(inputs.audio, inputs.video))]
+    features = [#TestFeature(zip(inputs.audio, inputs.video)),
+                VideoMovementFeature(zip(inputs.audio, inputs.video)),
+                #AudioFeature(zip(inputs.audio, inputs.video)),
+                ]
 
     # Output streams
     output_audio_streams = [OutputAudioStream(device_id=params['OUTPUT_AUDIO']['audio_stream_device_id'])]
@@ -102,7 +105,6 @@ def tick(sources, features, output_streams):
     for i, source in enumerate(sources.video):
         if source.status:
             cv2.imshow(str(i), source.read())
-            cv2.waitKey(1)
 
 
 def periodic(scheduler, interval, action, action_args=()):
@@ -134,10 +136,10 @@ if __name__ == '__main__':
 
         # Initialize scheduler and set to repeat calls indefinitely
         system = sched.scheduler(time.time, time.sleep)
-        periodic(scheduler=system, interval=0.0001, action=tick, action_args=(sources, features, output_streams))
+        periodic(scheduler=system, interval=0.01, action=tick, action_args=(sources, features, output_streams))
 
         # Execute
-        system.run(blocking=False)
+        system.run()
 
         # Close output streams
         for output in output_streams.audio + output_streams.video:
@@ -149,6 +151,8 @@ if __name__ == '__main__':
             video_filename = params['OUTPUT_VIDEO']['video_filename']
             cmd = 'ffmpeg -i ' + video_filename + ' -i ' + audio_filename + ' -codec copy -shortest final_output.avi'
             subprocess.call(cmd, shell=True)
+
+        print('Exit.')
 
     except KeyboardInterrupt:
         print('ctrl-c, leaving ...')
