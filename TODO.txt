@@ -1,16 +1,13 @@
 
 Short-term goals:
-    - synchronization
     - ensure system works on laptop
-    - detangle audio-video pairs; just vote for video; will deal with audio later
     - test operation on videos
-    - medium priority -> split feature calculations into sub-processes
+        + file reading implemented on separate processes but not tested
+    - mid priority -> synchronization
+    - mid priority -> split feature calculations into sub-processes
     - low priority -> input streams in one output window (tiled)
 
 Multiprocessing:
-    - run features in independent processes?
-    - Setting the interval to a custom rate
-    - Writing a file at the end
     - Killing child processes
 
 Option to override choice of audio

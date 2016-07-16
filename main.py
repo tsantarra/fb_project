@@ -50,7 +50,7 @@ def init():
 
     # Features for selecting a stream
     features = [#TestFeature(zip(inputs.audio, inputs.video)),
-                VideoMovementFeature(zip(inputs.audio, inputs.video)),
+                VideoMovementFeature(inputs.video),
                 #AudioFeature(zip(inputs.audio, inputs.video)),
                 ]
 
@@ -96,7 +96,7 @@ def tick(sources, features, output_streams):
     logging.debug('Vote result:' + str(result))
 
     # Update Output Stream
-    _, video_source = max(result, key=lambda k: result[k])
+    video_source = max(result, key=lambda k: result[k])
 
     for output_audio in output_streams.audio:
         output_audio.write(sources.main_audio.read())
@@ -107,7 +107,7 @@ def tick(sources, features, output_streams):
     # Testing video stream. Not permanent code.
     for i, source in enumerate(sources.video):
         if source.status:
-            cv2.moveWindow(str(i), i*640, 0)
+            cv2.moveWindow(str(i), i * 640, 0)
             cv2.imshow(str(i), source.read())
 
 

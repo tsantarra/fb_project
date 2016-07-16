@@ -5,10 +5,10 @@ from features.distribution import Distribution
 
 class VideoMovementFeature:
 
-    def __init__(self, audio_video_pairs, window_length=10, thrash_limit=3):
+    def __init__(self, video_sources, window_length=10, thrash_limit=3):
         self.window_length = window_length
         self.thrash_limit = thrash_limit
-        self.sources = list(audio_video_pairs)
+        self.sources = list(video_sources)
         self.window = deque()
         self.last_selected = None
         self.time_since_switch = 0
@@ -26,14 +26,14 @@ class VideoMovementFeature:
                     self.time_since_switch = 0
 
         # Vote distribution
-        vote = Distribution({source_pair: 0 for source_pair in self.sources})
+        vote = Distribution({source: 0 for source in self.sources})
         vote[self.last_selected] = 1.0
         return vote
 
     def update(self):
         # Initial conditions
         if not self.last_frames:
-            self.last_frames = {source: source[1].read() for source in self.sources}
+            self.last_frames = {source: source.read() for source in self.sources}
             self.window.append(self.sources[0])
             return
 
@@ -43,7 +43,7 @@ class VideoMovementFeature:
         self.time_since_switch += 1
 
         # Process new frames
-        new_frames = {source: source[1].read() for source in self.sources}
+        new_frames = {source: source.read() for source in self.sources}
 
         diffs = {source: cv2.absdiff(new_frames[source], self.last_frames[source]) for source in new_frames
                  if (new_frames[source] is not None and self.last_frames[source] is not None)}

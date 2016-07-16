@@ -115,41 +115,86 @@ class VideoStream(DataSource):
 
 
 class AudioFile(DataSource):
-    def __init__(self, filename, frames_per_tick=1):
-        self.stream = wave.open(filename, 'r')
+    @staticmethod
+    def read_from_file(filename, queue):
+        file_stream = wave.open(filename, 'r')
+        file_length = file_stream.getnframes()
+        channels = file_stream.getnchannels()
+        frames_per_tick = file_stream.getframerate()
+
+        def read_frames(queue):
+            # end criteria? check with file length? Keep track of position somehow?
+
+            raw_data = file_stream.readframes(1)
+            # for compatibility with sounddevice output, need numpy array
+            # source: http://stackoverflow.com/questions/30550212/raw-numpy-array-from-real-time-network-audio-stream-in-python
+            numpy_array = numpy.fromstring(raw_data, 'float32')
+            queue.put(numpy_array)
+
+        scheduler = create_periodic_event(interval=1.0 / frames_per_tick, action=read_frames, action_args=(queue,))
+        scheduler.run()
+
+    def __init__(self, filename):
+        self.queue = Queue()
+        self.process = Process(target=AudioFile.read_from_file, args=(filename, self.queue))
+        self.process.start()
+
         self.last_frame = None
         self.status = None
-        self.file_length = self.stream.getnframes()
         self.position = 0
-        self.frames_per_tick = frames_per_tick
 
     def update(self):
         if self.position > self.file_length:
+            self.process.terminate()
             self.last_frame = None
             return
 
-        raw_data = self.stream.readframes(self.frames_per_tick)
-        self.last_frame = int(struct.unpack("<h", raw_data)[0])
-        self.position += self.frames_per_tick
+        frame = None
+        while not self.queue.empty():
+            new_frame = self.queue.get()
+
+            if frame is None:
+                frame = new_frame
+            else:
+                frame = numpy.append(frame, new_frame)
+
+            self.position += 1
+
+        if frame is not None:
+            self.last_frame = frame
 
     def read(self):
         return self.last_frame
 
     def __del__(self):
-        self.stream.close()
+            self.process.terminate()
 
 
 class VideoFile(DataSource):
+    @staticmethod
+    def read_file(filename, queue):
+        stream = cv2.VideoCapture(filename)
+        frame_rate = stream.get(cv2.CAP_PROP_FPS)
+
+        def read_frame(queue):
+            status, frame = stream.read()
+            queue.put(frame)
+
+        scheduler = create_periodic_event(interval=1.0 / frame_rate, action=read_frame, action_args=(queue,))
+        scheduler.run()
+
     def __init__(self, filename):
-        self.stream = cv2.VideoCapture(filename)
         self.last_frame = None
-        self.status = self.stream.isOpened()
+        self.queue = Queue()
+        self.process = Process(target=VideoFile.read_file, args=(filename, self.queue))
+        self.process.start()
 
     def update(self):
-        self.status, self.last_frame = self.stream.read()
+        if not self.queue.empty():
+            self.last_frame = self.queue.get()
 
     def read(self):
         return self.last_frame
 
     def __del__(self):
-        self.stream.release()
+        self.process.terminate()

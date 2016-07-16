@@ -153,5 +153,5 @@ class OutputAudioFile(Output):
 
 
 def join_audio_and_video(audio_filename, video_filename):
-    cmd = 'ffmpeg -y -i ' + video_filename + ' -i ' + audio_filename + ' -codec copy -shortest output.avi'
+    cmd = 'ffmpeg -y -i ' + video_filename + ' -i ' + audio_filename + ' -async 1 -vsync 1 -codec copy -shortest output.avi'
     subprocess.call(cmd, shell=True)
