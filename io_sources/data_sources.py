@@ -10,6 +10,7 @@ from schedule import create_periodic_event
 
 
 class DataSource:
+    """ This class operates as the interface for all audio and video sources. """
 
     def update(self):
         """ Capture the next frame of data. """
@@ -21,22 +22,25 @@ class DataSource:
 
 
 ###########################################################################################################
-########################################      AUDIO     ###################################################
+########################################    STREAMS     ###################################################
 ###########################################################################################################
 
-def stream_audio(device_id, queue, interval=0.001):
-    stream = sounddevice.InputStream(device=device_id, channels=1, latency='low')
-    stream.start()
+class AudioStream(DataSource):
+    @staticmethod
+    def stream_audio(device_id, queue, interval=0.001):
+        """
+            This function is given to a sub-process for execution. It functions by opening an InputStream, then using
+            a scheduler to periodically grab frames, placing them in the synced Queue from the AudioStream instance.
+        """
+        stream = sounddevice.InputStream(device=device_id, channels=1, latency='low', dtype='float32')
+        stream.start()
 
-    def grab_audio_frames(queue, stream):
-        frame, flag = stream.read(stream.read_available)
-        queue.put((frame, flag, stream.active))
+        def grab_audio_frames(queue, stream):
+            frame, flag = stream.read(stream.read_available)
+            queue.put((frame, flag, stream.active))
 
-    scheduler = create_periodic_event(interval=0.001, action=grab_audio_frames, action_args=(queue, stream))
-    scheduler.run()
-
-
-class AudioStream:
+        scheduler = create_periodic_event(interval=interval, action=grab_audio_frames, action_args=(queue, stream))
+        scheduler.run()
 
     def __init__(self, device_id, input_interval=0.001):
         self.id = device_id
@@ -46,7 +50,7 @@ class AudioStream:
         self.flag = None
 
         self.queue = Queue()
-        self.process = Process(target=stream_audio, args=(device_id, self.queue, input_interval))
+        self.process = Process(target=AudioStream.stream_audio, args=(device_id, self.queue, input_interval))
         self.process.start()
 
     def update(self):
@@ -68,23 +72,21 @@ class AudioStream:
         self.process.terminate()
 
 
-###########################################################################################################
-########################################      VIDEO     ###################################################
-###########################################################################################################
+class VideoStream(DataSource):
+    @staticmethod
+    def stream_video(device_id, queue, interval=0.015):
+        """
+            This function is given to a sub-process for execution. It functions by opening an InputStream, then using
+            a scheduler to periodically grab frames, placing them in the synced Queue from the VideoStream instance.
+        """
+        stream = cv2.VideoCapture(device_id)
 
+        def grab_video_frame(queue, stream):
+            status, frame = stream.read()
+            queue.put((status, frame))
 
-def stream_video(device_id, queue, interval=0.015):
-    stream = cv2.VideoCapture(device_id)
-
-    def grab_video_frame(queue, stream):
-        status, frame = stream.read()
-        queue.put((status, frame))
-
-    scheduler = create_periodic_event(interval=interval, action=grab_video_frame, action_args=(queue, stream))
-    scheduler.run()
-
-
-class VideoStream:
+        scheduler = create_periodic_event(interval=interval, action=grab_video_frame, action_args=(queue, stream))
+        scheduler.run()
 
     def __init__(self, device_id, input_interval=0.015):
         self.id = device_id
@@ -93,7 +95,7 @@ class VideoStream:
         self.last_frame = None
 
         self.queue = Queue(maxsize=1)
-        self.process = Process(target=stream_video, args=(device_id, self.queue, input_interval))
+        self.process = Process(target=VideoStream.stream_video, args=(device_id, self.queue, input_interval))
         self.process.start()
 
     def update(self):
@@ -113,7 +115,6 @@ class VideoStream:
 
 
 class AudioFile(DataSource):
-
     def __init__(self, filename, frames_per_tick=1):
         self.stream = wave.open(filename, 'r')
         self.last_frame = None
@@ -139,7 +140,6 @@ class AudioFile(DataSource):
 
 
 class VideoFile(DataSource):
-
     def __init__(self, filename):
         self.stream = cv2.VideoCapture(filename)
         self.last_frame = None
@@ -153,7 +153,3 @@ class VideoFile(DataSource):
 
     def __del__(self):
         self.stream.release()
-
-
-
-

@@ -1,7 +1,6 @@
 import ast
 import configparser
 import logging
-import sched
 import sys
 import time
 import traceback
@@ -13,11 +12,12 @@ from features.test_feature import TestFeature
 from features.distribution import Distribution
 from features.video_movement_feature import VideoMovementFeature
 from io_sources.data_sources import VideoStream, AudioStream, VideoFile
-from io_sources.output import OutputVideoStream, OutputAudioStream, OutputAudioFile, OutputVideoFile
+from io_sources.output import OutputVideoStream, OutputAudioStream, OutputAudioFile, OutputVideoFile, join_audio_and_video
 from schedule import create_periodic_event
 
 from collections import namedtuple
-MediaStreams = namedtuple("MediaStreams", ["audio", "video"])
+InputMediaStreams = namedtuple("InputMediaStreams", ["audio", "video", "main_audio"])
+OutputMediaStreams = namedtuple("OutputMediaStreams", ["audio", "video"])
 
 
 def parse_config_settings():
@@ -42,8 +42,11 @@ def init():
     params = parse_config_settings()
 
     # Streams of data
-    inputs = MediaStreams([AudioStream(id) for id in params['AUDIO']['active_microphone_ids']],
-                          [VideoStream(id) for id in params['VIDEO']['active_camera_ids']])
+    input_audio = [AudioStream(id) for id in params['AUDIO']['active_microphone_ids']]
+    input_video = [VideoStream(id) for id in params['VIDEO']['active_camera_ids']]
+    main_audio_input = [stream for stream in input_audio
+                        if stream.id == params['OUTPUT_AUDIO']['audio_input_device_id']][0]
+    inputs = InputMediaStreams(audio=input_audio, video=input_video, main_audio=main_audio_input)
 
     # Features for selecting a stream
     features = [#TestFeature(zip(inputs.audio, inputs.video)),
@@ -52,8 +55,8 @@ def init():
                 ]
 
     # Output streams
-    output_audio_streams = [OutputAudioStream(device_id=params['OUTPUT_AUDIO']['audio_stream_device_id'])]
-    output_video_streams = [OutputVideoStream(id='Output')]
+    output_audio_streams = [OutputAudioStream(device_id=params['OUTPUT_AUDIO']['audio_output_device_id'])]
+    output_video_streams = [OutputVideoStream(device_id='Output')]
 
     if params['OUTPUT_AUDIO']['audio_file']:
         output_audio_streams.append(OutputAudioFile(params['OUTPUT_AUDIO']['audio_filename']))
@@ -61,7 +64,7 @@ def init():
     if params['OUTPUT_VIDEO']['video_file']:
         output_video_streams.append(OutputVideoFile(params['OUTPUT_VIDEO']['video_filename']))
 
-    outputs = MediaStreams(output_audio_streams, output_video_streams)
+    outputs = OutputMediaStreams(output_audio_streams, output_video_streams)
 
     return inputs, features, outputs, params
 
@@ -93,10 +96,10 @@ def tick(sources, features, output_streams):
     logging.debug('Vote result:' + str(result))
 
     # Update Output Stream
-    audio_source, video_source = max(result, key=lambda k: result[k])
+    _, video_source = max(result, key=lambda k: result[k])
 
     for output_audio in output_streams.audio:
-        output_audio.write(audio_source.read())
+        output_audio.write(sources.main_audio.read())
 
     for output_video in output_streams.video:
         output_video.write(video_source.read())
@@ -104,6 +107,7 @@ def tick(sources, features, output_streams):
     # Testing video stream. Not permanent code.
     for i, source in enumerate(sources.video):
         if source.status:
+            cv2.moveWindow(str(i), i*640, 0)
             cv2.imshow(str(i), source.read())
 
 
@@ -135,10 +139,7 @@ if __name__ == '__main__':
 
         # Create mixed audio/video file
         if params['OUTPUT_AUDIO']['audio_file'] and params['OUTPUT_VIDEO']['video_file']:
-            audio_filename = params['OUTPUT_AUDIO']['audio_filename']
-            video_filename = params['OUTPUT_VIDEO']['video_filename']
-            cmd = 'ffmpeg -i ' + video_filename + ' -i ' + audio_filename + ' -codec copy -shortest final_output.avi'
-            subprocess.call(cmd, shell=True)
+            join_audio_and_video(params['OUTPUT_AUDIO']['audio_filename'], params['OUTPUT_VIDEO']['video_filename'])
 
         print('Exit.')
 
