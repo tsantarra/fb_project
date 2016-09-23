@@ -1,19 +1,45 @@
 
+
+Synchronization:
+    - separate processes for input and output need to align better
+    - we can drop frames for video, but audio?
+    - transferring between queues is handled in main loop, which results in some extra adds if faster than i/o frequency
+    - some tenants to achieve:
+        + all IO should run at the same rate with respect to time (not cycles)
+        + output should not double up on frames written (when input lags)
+        +
+
+Halting:
+    - current halt criteria is specified as main process window key entry (not output pane, which is separate)
+    - need a better method
+    - also need to determine how to appropriately kill subprocess and release devices
+
 Short-term goals:
-    - ensure system works on laptop
-    - test operation on videos
-        + file reading implemented on separate processes but not tested
-    - mid priority -> synchronization
-    - mid priority -> split feature calculations into sub-processes
-    - low priority -> input streams in one output window (tiled)
+    - synchronization
+        + main loop set on own interval: 0.01
+            - each component has its own interval
+            - definitely needs more syncing.
+        + major issues for webcam audio (delayed)
+            - only on recorded part, live display is fine
+        + also, pad files if frames were dropped
+        + may write the same frame too often (write called more than read/update)
+    - split feature calculations into sub-processes
+        + only really necessary if computation is expensive or IO-bound
+    - input streams in one output window (tiled)
+    - calibration of audio (so sensitive mics don't dominate)
+    - weighted features.
+
+Technical info:
+    - audio sample rates: 44100 16000
+    - dtypes float32 Int16
+
+Found the file problem:
+    - sample rate must be agreed upon by input and output devices
+    - need to get this information in initialization
+    - read and write updates must be synced, or you can write source.last_frame multiple times
 
 Multiprocessing:
     - Killing child processes
-
-Option to override choice of audio
-Calibration of audio (so sensitive mics don't dominate)
-Weighted features.
-
 
 Outline of system architecture:
     Data is input via sources (either streams or static files, both of which can be treated as generators)

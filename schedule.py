@@ -10,7 +10,7 @@ def periodic(scheduler, interval, action, action_args=(), halt_check=None):
     if (halt_check is None) or (not halt_check()):
         # Schedule next iteration
         scheduler.enter(delay=interval, priority=1, action=periodic,
-                        argument=(scheduler, interval, action, action_args,  halt_check))
+                        argument=(scheduler, interval, action, action_args, halt_check))
     else:
         # Cancel all events
         for event in scheduler.queue:

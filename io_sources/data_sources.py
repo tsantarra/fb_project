@@ -20,6 +20,9 @@ class DataSource:
         """ Return the latest frame of data. """
         raise NotImplementedError
 
+    def start(self):
+        raise NotImplementedError
+
 
 ###########################################################################################################
 ########################################    STREAMS     ###################################################
@@ -27,30 +30,29 @@ class DataSource:
 
 class AudioStream(DataSource):
     @staticmethod
-    def stream_audio(device_id, queue, interval=0.001):
+    def stream_audio(device_id, sample_rate, dtype, queue):
         """
             This function is given to a sub-process for execution. It functions by opening an InputStream, then using
             a scheduler to periodically grab frames, placing them in the synced Queue from the AudioStream instance.
         """
-        stream = sounddevice.InputStream(device=device_id, channels=1, latency='low', dtype='float32')
+        stream = sounddevice.InputStream(device=device_id, channels=1, samplerate=sample_rate, latency='low', dtype=dtype)
         stream.start()
 
         def grab_audio_frames(queue, stream):
             frame, flag = stream.read(stream.read_available)
             queue.put((frame, flag, stream.active))
 
-        scheduler = create_periodic_event(interval=interval, action=grab_audio_frames, action_args=(queue, stream))
+        scheduler = create_periodic_event(interval=0.001, action=grab_audio_frames, action_args=(queue, stream))
         scheduler.run()
 
-    def __init__(self, device_id, input_interval=0.001):
+    def __init__(self, device_id, sample_rate, dtype):
         self.id = device_id
-        self.interval = input_interval
         self.last_frame = []
         self.status = True
         self.flag = None
 
         self.queue = Queue()
-        self.process = Process(target=AudioStream.stream_audio, args=(device_id, self.queue, input_interval))
+        self.process = Process(target=AudioStream.stream_audio, args=(device_id, sample_rate, dtype, self.queue))
         self.process.start()
 
     def update(self):
@@ -63,6 +65,7 @@ class AudioStream(DataSource):
             else:
                 frame = numpy.append(frame, new_frame)
 
+        if frame is not None:
             self.last_frame = frame
 
     def read(self):
@@ -117,39 +120,39 @@ class VideoStream(DataSource):
 class AudioFile(DataSource):
     @staticmethod
     def read_from_file(filename, queue):
-        file_stream = wave.open(filename, 'r')
+        file_stream = wave.open(filename, 'rb')
         file_length = file_stream.getnframes()
-        channels = file_stream.getnchannels()
-        frames_per_tick = file_stream.getframerate()
+        frames_per_second = file_stream.getframerate()
 
-        def read_frames(queue):
-            # end criteria? check with file length? Keep track of position somehow?
+        chunk_size = 1000
+        interval = 1.0 / frames_per_second * chunk_size
 
-            raw_data = file_stream.readframes(1)
+        def read_frames(stream, queue):
+            raw_data = stream.readframes(nframes=chunk_size)
+
             # for compatibility with sounddevice output, need numpy array
             # source: http://stackoverflow.com/questions/30550212/raw-numpy-array-from-real-time-network-audio-stream-in-python
-            numpy_array = numpy.fromstring(raw_data, 'float32')
-            queue.put(numpy_array)
+            numpy_array = numpy.fromstring(raw_data, '<h')
+            queue.put(numpy_array) #.astype('float32', copy=True))
 
-        scheduler = create_periodic_event(interval=1.0 / frames_per_tick, action=read_frames, action_args=(queue,))
+            # end criteria? check with file length? Keep track of position somehow?
+
+        scheduler = create_periodic_event(interval=1/frames_per_second, action=read_frames,
+                                          action_args=(file_stream, queue,))
         scheduler.run()
 
     def __init__(self, filename):
+        self.last_frame = None
+        self.status = False
+
         self.queue = Queue()
         self.process = Process(target=AudioFile.read_from_file, args=(filename, self.queue))
         self.process.start()
 
-        self.last_frame = None
-        self.status = None
-        self.position = 0
-
     def update(self):
-        if self.position > self.file_length:
-            self.process.terminate()
-            self.last_frame = None
-            return
-
         frame = None
+        self.status = False
+
         while not self.queue.empty():
             new_frame = self.queue.get()
 
@@ -158,10 +161,11 @@ class AudioFile(DataSource):
             else:
                 frame = numpy.append(frame, new_frame)
 
-            self.position += 1
-
         if frame is not None:
             self.last_frame = frame
+            self.status = True
+        else:
+            self.last_frame = None
 
     def read(self):
         return self.last_frame
@@ -178,13 +182,16 @@ class VideoFile(DataSource):
 
         def read_frame(queue):
             status, frame = stream.read()
-            queue.put(frame)
+            if status:
+                queue.put(frame)
 
-        scheduler = create_periodic_event(interval=1.0 / frame_rate, action=read_frame, action_args=(queue,))
+        scheduler = create_periodic_event(interval=1/frame_rate, action=read_frame, action_args=(queue,))
         scheduler.run()
 
     def __init__(self, filename):
         self.last_frame = None
+        self.status = False
+
         self.queue = Queue()
         self.process = Process(target=VideoFile.read_file, args=(filename, self.queue))
         self.process.start()
@@ -192,6 +199,9 @@ class VideoFile(DataSource):
     def update(self):
         if not self.queue.empty():
             self.last_frame = self.queue.get()
+            self.status = True
+        else:
+            self.status = False
 
     def read(self):
         return self.last_frame
