@@ -1,9 +1,19 @@
 
+Live input/output should drop frames. It's the only way it will work.
+
+TODO
+    - file output
+    - feature calculation
+    - vote tallying
+    - termination
+    - flexible initialization?
+    - verify successful application to videos and webcams
 
 Synchronization:
     - separate processes for input and output need to align better
     - we can drop frames for video, but audio?
     - transferring between queues is handled in main loop, which results in some extra adds if faster than i/o frequency
+        - in new global clock setup, data will only be transferred once
     - some tenants to achieve:
         + all IO should run at the same rate with respect to time (not cycles)
         + output should not double up on frames written (when input lags)

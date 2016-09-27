@@ -9,9 +9,12 @@ import cv2
 from features.audio_feature import AudioFeature
 from features.distribution import Distribution
 from features.video_movement_feature import VideoMovementFeature
-from io_sources.data_sources import VideoStream, AudioStream, VideoFile, AudioFile
+from io_sources.data_sources import InputVideoStream, InputAudioStream, InputVideoFile, InputAudioFile
 from io_sources.data_output import OutputVideoStream, OutputAudioStream, OutputAudioFile, OutputVideoFile, join_audio_and_video
 from schedule import create_periodic_event
+from functools import partial
+from msvcrt import getch, kbhit
+from numpy import zeros
 
 from collections import namedtuple
 InputMediaStreams = namedtuple("InputMediaStreams", ["audio", "video", "main_audio"])
@@ -44,17 +47,17 @@ def init():
 
     # Streams of data
     if params['MODE']['live_mode']:
-        input_audio = [AudioStream(id, sample_rate=global_sample_rate, dtype=global_dtype) for id in params['AUDIO']['active_microphone_ids']]
+        input_audio = [InputAudioStream(id, sample_rate=global_sample_rate, dtype=global_dtype) for id in params['AUDIO']['active_microphone_ids']]
         main_audio_input = [stream for stream in input_audio
                             if stream.id == params['OUTPUT_AUDIO']['audio_input_device_id']][0]
 
-        input_video = [VideoStream(id) for id in params['VIDEO']['active_camera_ids']]
+        input_video = [InputVideoStream(id) for id in params['VIDEO']['active_camera_ids']]
 
     else:
-        input_audio = [AudioFile(filename) for filename in params['AUDIO']['audio_filenames']]
-        main_audio_input = AudioFile(filename=params['AUDIO']['main_audio_file'])
+        input_audio = [InputAudioFile(filename) for filename in params['AUDIO']['audio_filenames']]
+        main_audio_input = InputAudioFile(filename=params['AUDIO']['main_audio_file'])
 
-        input_video = [VideoFile(filename) for filename in params['VIDEO']['video_filenames']]
+        input_video = [InputVideoFile(filename) for filename in params['VIDEO']['video_filenames']]
 
     inputs = InputMediaStreams(audio=input_audio, video=input_video, main_audio=main_audio_input)
 
@@ -64,16 +67,27 @@ def init():
                 ]
 
     # Output streams
-    output_audio_streams = [OutputAudioStream(device_id=params['OUTPUT_AUDIO']['audio_output_device_id'], sample_rate=global_sample_rate, dtype=global_dtype)]
-    output_video_streams = [OutputVideoStream(stream_name='Output')]
+    output_audio_streams = [OutputAudioStream(device_id=params['OUTPUT_AUDIO']['audio_output_device_id'],
+                                              input=main_audio_input, sample_rate=global_sample_rate,
+                                              dtype=global_dtype)]
+
+    output_video_streams = [OutputVideoStream(stream_name=input_stream.id, input=input_stream)
+                            for input_stream in input_video]
 
     if params['OUTPUT_AUDIO']['audio_file']:
-        output_audio_streams.append(OutputAudioFile(filename=params['OUTPUT_AUDIO']['audio_filename'], sample_rate=global_sample_rate))
+        output_audio_streams.append(OutputAudioFile(filename=params['OUTPUT_AUDIO']['audio_filename'],
+                                                    input=main_audio_input,
+                                                    sample_rate=global_sample_rate))
 
     if params['OUTPUT_VIDEO']['video_file']:
-        output_video_streams.append(OutputVideoFile(filename=params['OUTPUT_VIDEO']['video_filename']))
+        output_video_streams.append(OutputVideoFile(filename=params['OUTPUT_VIDEO']['video_filename'],
+                                                    input=input_video[0]))
 
     outputs = OutputMediaStreams(audio=output_audio_streams, video=output_video_streams)
+
+    # start everything
+    for process in set(inputs.audio + inputs.video + [inputs.main_audio] + features + outputs.audio + outputs.video):
+        process.start()
 
     return inputs, features, outputs, params
 
@@ -90,44 +104,23 @@ def tick(sources, features, output_streams):
     for source in set(sources.audio + sources.video + [sources.main_audio]):
         source.update()
 
-    # update main audio source (NOTE: FIX THIS, AS SOMETIMES IT'S IN SOURCES LIST, AND SOMETIMES IT'S NOT)
-    #sources.main_audio.update()
+    for output in set(output_streams.audio + output_streams.video):
+        output.update()
 
-    # Update Features
-    votes = []
-    for feature in features:
-        feature.update()
-        votes.append(feature.weight_sources())
-
-    # Vote tally
-    keys = votes[0].keys()
-    result = Distribution({key: 0.0 for key in keys})
-    for vote in votes:
-        result = result.add_distribution(vote)
-
-    logging.debug('Vote result:' + str(result))
-
-    # Update Output Stream
-    video_source = max(result, key=lambda k: result[k])
-
-    audio_data = sources.main_audio.read()
-    for output_audio in output_streams.audio:
-        output_audio.write(audio_data)
-
-    video_data = video_source.read()
-    for output_video in output_streams.video:
-        output_video.write(video_data)
-        
-    # Testing video stream. Not permanent code.
-    for i, source in enumerate(sources.video):
-        if source.status:
-            cv2.moveWindow(str(i), i * 640, 0)
-            cv2.imshow(str(i), source.read())
+    return
 
 
-def halt_criteria():
+def halt_criteria(processes):
     """ This function provides the necessary check for terminating the system loop. """
-    return cv2.waitKey(10) == 27
+    blank_image = zeros((30, 30, 3))
+    cv2.imshow('Exit', blank_image)
+
+    end = cv2.waitKey(10) == 27
+    if end:
+        for process in processes:
+            process.close()
+
+    return end
 
 
 if __name__ == '__main__':
@@ -136,20 +129,25 @@ if __name__ == '__main__':
     try:
         # Initialize system sources and features calculated over sources
         sources, features, output_streams, params = init()
+        processes = set(sources.audio + sources.video + features + output_streams.audio + output_streams.video)
 
         # Initialize scheduler and set to repeat calls indefinitely
-        system = create_periodic_event(interval=0.001, action=tick,
-                                       action_args=(sources, features, output_streams), halt_check=halt_criteria)
+        system = create_periodic_event(interval=1/30,
+                                       action=tick,
+                                       action_args=(sources, features, output_streams),
+                                       halt_check=partial(halt_criteria, processes))
 
         # Execute
         system.run()
 
+        # Delay to allow sub-processes to quit.
+        for proc in [proc for proc in processes if not proc.complete()]:
+            print('waiting on:', proc, proc.process.exitcode)
+            proc.process.join()
+
         # Kill windows
         cv2.destroyAllWindows()
-
-        # Close output streams
-        for output in output_streams.audio + output_streams.video:
-            output.close()
+        cv2.waitKey(1)
 
         # Create mixed audio/video file
         if params['OUTPUT_AUDIO']['audio_file'] and params['OUTPUT_VIDEO']['video_file']:

@@ -7,17 +7,16 @@ def periodic(scheduler, interval, action, action_args=(), halt_check=None):
         reason for this is that we desire an arbitrarily long series of repeated loops rather than a finite series
         of events that would be scheduled all up front.
     """
+    # Perform action with specified args
+    action(*action_args)
+
     if (halt_check is None) or (not halt_check()):
         # Schedule next iteration
         scheduler.enter(delay=interval, priority=1, action=periodic,
                         argument=(scheduler, interval, action, action_args, halt_check))
     else:
-        # Cancel all events
-        for event in scheduler.queue:
-            scheduler.cancel(event)
-
-    # Perform action with specified args
-    action(*action_args)
+        print('Ended:', action)
+        return
 
 
 def create_periodic_event(interval, action, action_args, halt_check=None):
