@@ -4,12 +4,12 @@ from multiprocessing import Process, Queue, Value
 class PipelineFunction:
     """ This class operates as an intermediate processing point between inputs and outputs. """
 
-    def __init__(self, target_function, params, inputs, drop_frames=False):
+    def __init__(self, target_function, params, sources, drop_frames=False):
         """ Initialize the synchronized objects and work process. """
         size = 1 if drop_frames else 0
 
         self.input_queue = Queue(maxsize=size)
-        self.inputs = inputs
+        self.input_sources = sources
 
         self.output_queue = Queue(maxsize=size)
         self.output_frame = None
@@ -23,8 +23,8 @@ class PipelineFunction:
 
     def update(self):
         """ Update the inputs and outputs of the function. """
-        if self.inputs:
-            self.input_queue.put([input.read() for input in self.inputs])
+        if self.input_sources:
+            self.input_queue.put([source.read() for source in self.input_sources])
 
         if self.output_queue.empty():
             self.output_frame = None

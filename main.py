@@ -68,20 +68,20 @@ def init():
 
     # Output streams
     output_audio_streams = [OutputAudioStream(device_id=params['OUTPUT_AUDIO']['audio_output_device_id'],
-                                              input=main_audio_input, sample_rate=global_sample_rate,
+                                              input_stream=main_audio_input, sample_rate=global_sample_rate,
                                               dtype=global_dtype)]
 
-    output_video_streams = [OutputVideoStream(stream_name=input_stream.id, input=input_stream)
+    output_video_streams = [OutputVideoStream(stream_id=input_stream.id, input_stream=input_stream)
                             for input_stream in input_video]
 
     if params['OUTPUT_AUDIO']['audio_file']:
         output_audio_streams.append(OutputAudioFile(filename=params['OUTPUT_AUDIO']['audio_filename'],
-                                                    input=main_audio_input,
+                                                    input_stream=main_audio_input,
                                                     sample_rate=global_sample_rate))
 
     if params['OUTPUT_VIDEO']['video_file']:
         output_video_streams.append(OutputVideoFile(filename=params['OUTPUT_VIDEO']['video_filename'],
-                                                    input=input_video[0]))
+                                                    input_stream=input_video[0]))
 
     outputs = OutputMediaStreams(audio=output_audio_streams, video=output_video_streams)
 
@@ -139,11 +139,6 @@ if __name__ == '__main__':
 
         # Execute
         system.run()
-
-        # Delay to allow sub-processes to quit.
-        for proc in [proc for proc in processes if not proc.complete()]:
-            print('waiting on:', proc, proc.process.exitcode)
-            proc.process.join()
 
         # Kill windows
         cv2.destroyAllWindows()

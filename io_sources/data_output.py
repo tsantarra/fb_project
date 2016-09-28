@@ -3,9 +3,7 @@ import sounddevice
 import soundfile
 import subprocess
 import numpy
-import time
 
-from multiprocessing import Process, Queue, Value
 from schedule import create_periodic_event
 from pipeline_interfaces import PipelineFunction
 
@@ -20,95 +18,63 @@ class ReadFromOutputException(Exception):
 
 class OutputVideoStream(PipelineFunction):
 
-    def __init__(self, stream_name, input, dimensions=(640, 480)):
-        self.id = str(stream_name)
-        self.input = input
-        self.end = Value('b', 0)
+    def __init__(self, stream_id, input_stream, dimensions=(640, 480), interval=1 / 30):
+        self.id = str(stream_id)
 
-        self.queue = Queue(maxsize=1)  # allow dropped frames
-        self.process = Process(target=OutputVideoStream.show_video, args=(self.id, self.queue, dimensions, self.end))
-
-    def start(self):
-        self.process.start()
-
-    def update(self):
-        if self.input.status:
-            self.queue.put(self.input.read())
+        super().__init__(target_function=OutputVideoStream.show_video,
+                         params=(self.id, dimensions, interval),
+                         sources=[input_stream],
+                         drop_frames=True)
 
     def read(self):
         raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
 
-    def close(self):
-        self.end.value = 1
-
-    def complete(self):
-        return self.process.exitcode is not None
-
     @staticmethod
-    def show_video(stream_id, queue, dimensions, end):
+    def show_video(input_queue, output_queue, stream_id, dimensions, interval):
         import cv2
 
-        def display_video_frame(queue):
-            if not queue.empty():
-                frame = queue.get()
-                cv2.imshow(stream_id, cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA))
-                cv2.waitKey(1)
+        def display_video_frame():
+            if not input_queue.empty():
+                inputs = input_queue.get()
+                frame = inputs[0]
 
-        def check_end():
-            end_val = bool(end.value)
-            if end_val:
-                cv2.destroyWindow(stream_id)
-            return end_val
+                if type(frame) == numpy.ndarray:
+                    cv2.imshow(stream_id, cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA))
+                    cv2.waitKey(1)
 
-        scheduler = create_periodic_event(interval=1/30,
-                                          action=display_video_frame,
-                                          action_args=(queue,),
-                                          halt_check=check_end)
+        scheduler = create_periodic_event(interval=interval, action=display_video_frame)
         scheduler.run()
 
 
 class OutputAudioStream(PipelineFunction):
 
-    def __init__(self, device_id, input, sample_rate, dtype, channels=1, latency='low'):
+    def __init__(self, device_id, input_stream, sample_rate, dtype, channels=1, latency='low', interval=1/30):
         self.id = device_id
-        self.input = input
+        self.input_stream = input_stream
 
-        self.end = Value('b', 0)
-        self.queue = Queue()
-        self.process = Process(target=OutputAudioStream.output_audio, args=(self.id, channels, sample_rate,
-                                                                            latency, dtype, self.queue, self.end))
-
-    def start(self):
-        self.process.start()
+        super().__init__(target_function=OutputAudioStream.output_audio,
+                         params=(device_id, channels, sample_rate, latency, dtype, interval),
+                         sources=[input_stream],
+                         drop_frames=True)
 
     def update(self):
-        if self.input.status:
-            data = self.input.read()
+        data = self.input_stream.read()
 
-            if type(data) == numpy.ndarray:
-                self.queue.put(data)
+        if type(data) == numpy.ndarray:
+            self.input_queue.put(data)
 
     def read(self):
         raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
 
-    def close(self):
-        self.end.value = 1
-
-    def complete(self):
-        return self.process.exitcode is not None
-
-    def __del__(self):
-        self.close()
-
     @staticmethod
-    def output_audio(device_id, channels, sample_rate, latency, dtype, queue, end):
+    def output_audio(input_queue, output_queue, device_id, channels, sample_rate, latency, dtype, interval):
         stream = sounddevice.OutputStream(device=int(device_id), channels=channels, samplerate=sample_rate, latency=latency, dtype=dtype)
         stream.start()
 
-        def write_audio_frames(queue):
+        def write_audio_frames():
             frame = None
-            while not queue.empty():
-                new_frame = queue.get()
+            while not input_queue.empty():
+                new_frame = input_queue.get()
 
                 if frame is None:
                     frame = new_frame
@@ -116,13 +82,9 @@ class OutputAudioStream(PipelineFunction):
                     frame = numpy.append(frame, new_frame)
 
             if frame is not None:
-                stream.write(frame)  #.astype(dtype=dtype))
+                stream.write(frame)
 
-        def check_end():
-            end_val = bool(end.value)
-            return end_val
-
-        scheduler = create_periodic_event(interval=1/sample_rate, action=write_audio_frames, action_args=(queue,), halt_check=check_end)
+        scheduler = create_periodic_event(interval=interval, action=write_audio_frames)
         scheduler.run()
 
 ###########################################################################################################
@@ -132,99 +94,73 @@ class OutputAudioStream(PipelineFunction):
 
 class OutputVideoFile(PipelineFunction):
 
-    def __init__(self, filename, input, video_fps=30, dimensions=(640, 480)):
-        self.input = input
+    def __init__(self, filename, input_stream, video_fps=30, dimensions=(640, 480), interval=1/30):
+        self.filename = filename
+        self.input_stream = input_stream
 
-        self.last_frame = Queue(maxsize=1)
-        self.end = Value('b', 0)
-        self.queue = Queue()
-        self.process = Process(target=OutputVideoFile.output_video, args=(filename, video_fps, dimensions, self.queue, self.last_frame, self.end))
-
-    def start(self):
-        self.process.start()
+        super().__init__(target_function=OutputVideoFile.output_video,
+                         params=(filename, video_fps, dimensions, interval),
+                         sources=None,
+                         drop_frames=False)
 
     def update(self):
-        if self.input.status:
-            frame = self.input.read()
-            self.last_frame.put(frame)
-            self.queue.put(frame)
+        frame = self.input_stream.read()
+
+        if type(frame) == numpy.ndarray:
+            self.input_queue.put(frame)
 
     def read(self):
         raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
 
-    def close(self):
-        self.process.terminate()
-
-    def complete(self):
-        return self.process.exitcode is not None
-
-    def __del__(self):
-        self.close()
-
     @staticmethod
-    def output_video(filename, video_fps, dimensions, queue, last_frame, end):
-
+    def output_video(input_queue, output_queue, filename, video_fps, dimensions, interval):
         import cv2
         stream = cv2.VideoWriter(filename, cv2.VideoWriter_fourcc(*'XVID'), video_fps, dimensions)
 
+        # Necessary part: we need a container to store the last frame, which we can duplicate when we don't have
+        # new frames incoming. This avoids dropping frames in a video where we can't adjust the fps.
+        last_frame = [numpy.zeros((480, 640, 3), dtype='uint8')]
+
         def write_video_frames():
-            if queue.empty():
-                if last_frame.empty():  # Only empty at the beginning of the process.
-                    return
-                frame = last_frame.get()
+            if not input_queue.empty():
+                frame = input_queue.get()
+                last_frame[0] = frame
             else:
-                frame = queue.get()
+                frame = last_frame[0]
 
             stream.write(cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA))
 
-        def check_end():
-            end_val = bool(end.value)
-            return end_val
-
-        scheduler = create_periodic_event(interval=1/video_fps, action=write_video_frames, action_args=(), halt_check=check_end)
+        scheduler = create_periodic_event(interval=interval, action=write_video_frames)
         scheduler.run()
 
 
 class OutputAudioFile(PipelineFunction):
 
-    def __init__(self, filename, input, sample_rate, channels=1):
-        self.input = input
+    def __init__(self, filename, input_stream, sample_rate, channels=1, interval=1/30):
+        self.input_stream = input_stream
 
-        self.end = Value('b', 0)
-        self.queue = Queue(maxsize=1)
-        self.process = Process(target=OutputAudioFile.output_audio, args=(filename, sample_rate, channels, self.queue, self.end))
-
-    def start(self):
-        self.process.start()
+        super().__init__(target_function=OutputAudioFile.output_audio,
+                         params=(filename, sample_rate, channels, interval),
+                         sources=[input_stream],
+                         drop_frames=True)
 
     def update(self):
-        if self.input.status:
-            data = self.input.read()
+        data = self.input_stream.read()
 
-            if type(data) == numpy.ndarray:
-                self.queue.put(data)
+        if type(data) == numpy.ndarray:
+            self.input_queue.put(data)
 
     def read(self):
         raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
 
-    def close(self):
-        self.end.value = 1
-        #self.process.terminate()
-
-    def complete(self):
-        return self.process.exitcode is not None
-
-    def __del__(self):
-        self.close()
-
     @staticmethod
-    def output_audio(filename, sample_rate, channels, queue, end):
+    def output_audio(input_queue, output_queue, filename, sample_rate, channels, interval):
         stream = soundfile.SoundFile(filename, mode='w', samplerate=sample_rate, channels=channels)
 
-        def write_audio_frames(queue):
+        def write_audio_frames():
             frame = None
-            while not queue.empty():
-                new_frame = queue.get()
+            while not input_queue.empty():
+                new_frame = input_queue.get()
 
                 if frame is None:
                     frame = new_frame
@@ -232,12 +168,9 @@ class OutputAudioFile(PipelineFunction):
                     frame = numpy.append(frame, new_frame)
 
             if frame is not None:
-                stream.write(frame)  #.astype(dtype='float32'))
+                stream.write(frame)
 
-        def check_end():
-            end_val = bool(end.value)
-
-        scheduler = create_periodic_event(interval=1/sample_rate, action=write_audio_frames, action_args=(queue,), halt_check=check_end)
+        scheduler = create_periodic_event(interval=interval, action=write_audio_frames)
         scheduler.run()
 
 ###########################################################################################################
