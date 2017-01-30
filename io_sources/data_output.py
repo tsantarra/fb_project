@@ -1,11 +1,11 @@
+import subprocess
 
+import numpy
 import sounddevice
 import soundfile
-import subprocess
-import numpy
 
-from schedule import create_periodic_event
-from pipeline_interfaces import PipelineFunction
+from util.pipeline import PipelineFunction
+from util.schedule import create_periodic_event
 
 
 class ReadFromOutputException(Exception):
@@ -179,6 +179,6 @@ class OutputAudioFile(PipelineFunction):
 
 
 def join_audio_and_video(audio_filename, video_filename):
-    cmd = 'ffmpeg -y -i ' + video_filename + ' -i ' + audio_filename + ' -shortest -async 1 -vsync 1 -codec copy output.avi'
+    cmd = 'ffmpeg -y -i ' + video_filename + ' -i ' + audio_filename + ' -shortest -async 1 -vsync 1 -codec copy output/output.avi'
     # flags  -codec copy
     subprocess.call(cmd, shell=True)

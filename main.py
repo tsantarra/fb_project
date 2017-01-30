@@ -2,21 +2,19 @@ import ast
 import configparser
 import logging
 import sys
-import time
 import traceback
-import cv2
-
-from features.audio_feature import AudioFeature
-from features.distribution import Distribution
-from features.video_movement_feature import VideoMovementFeature
-from io_sources.data_sources import InputVideoStream, InputAudioStream, InputVideoFile, InputAudioFile
-from io_sources.data_output import OutputVideoStream, OutputAudioStream, OutputAudioFile, OutputVideoFile, join_audio_and_video
-from schedule import create_periodic_event
-from functools import partial
-from msvcrt import getch, kbhit
-from numpy import zeros
 
 from collections import namedtuple
+from functools import partial
+
+import cv2
+from numpy import zeros
+
+from features.video_movement_feature import VideoMovementFeature
+from io_sources.data_output import OutputVideoStream, OutputAudioStream, OutputAudioFile, OutputVideoFile, join_audio_and_video
+from io_sources.data_sources import InputVideoStream, InputAudioStream, InputVideoFile, InputAudioFile
+from util.schedule import create_periodic_event
+
 InputMediaStreams = namedtuple("InputMediaStreams", ["audio", "video", "main_audio"])
 OutputMediaStreams = namedtuple("OutputMediaStreams", ["audio", "video"])
 
@@ -50,13 +48,11 @@ def init():
         input_audio = [InputAudioStream(id, sample_rate=global_sample_rate, dtype=global_dtype) for id in params['AUDIO']['active_microphone_ids']]
         main_audio_input = [stream for stream in input_audio
                             if stream.id == params['OUTPUT_AUDIO']['audio_input_device_id']][0]
-
         input_video = [InputVideoStream(id) for id in params['VIDEO']['active_camera_ids']]
 
     else:
         input_audio = [InputAudioFile(filename) for filename in params['AUDIO']['audio_filenames']]
         main_audio_input = InputAudioFile(filename=params['AUDIO']['main_audio_file'])
-
         input_video = [InputVideoFile(filename) for filename in params['VIDEO']['video_filenames']]
 
     inputs = InputMediaStreams(audio=input_audio, video=input_video, main_audio=main_audio_input)
@@ -98,7 +94,6 @@ def tick(sources, features, output_streams):
         keeping in sync. The computation of selecting a primary stream then occurs. It is yet unclear if output writing
         should occur here or as part of a separate function.
     """
-    logging.debug('Tick at time ' + str(time.time()))
 
     # Update Sources
     for source in set(sources.audio + sources.video + [sources.main_audio]):

@@ -1,5 +1,6 @@
 from collections import deque, Counter
-from features.distribution import Distribution
+
+from util.distribution import Distribution
 
 
 class AudioFeature:
@@ -37,8 +38,6 @@ class AudioFeature:
         # Append max source
         self.window.append(max(self.sources, key=lambda av: max(av[0].read(), default=0)))
 
-    def complete(self):
-        return True  #self.process.exitcode is not None
 
 
 

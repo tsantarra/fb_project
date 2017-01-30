@@ -1,4 +1,4 @@
-from multiprocessing import Process, Queue, Value
+from multiprocessing import Process, Queue
 
 
 class PipelineFunction:

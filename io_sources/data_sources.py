@@ -1,9 +1,20 @@
 import wave
-import sounddevice
 import numpy
+import sounddevice
 
-from schedule import create_periodic_event
-from pipeline_interfaces import PipelineFunction
+from collections import Mapping
+
+from util.pipeline import PipelineFunction
+from util.schedule import create_periodic_event
+
+
+class InputManager(Mapping):
+
+    def __init__(self):
+        pass
+
+
+
 
 ###########################################################################################################
 ########################################    STREAMS     ###################################################

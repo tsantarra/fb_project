@@ -1,7 +1,10 @@
 from collections import deque, Counter
+
 import cv2
-from features.distribution import Distribution
-from pipeline_interfaces import PipelineFunction
+
+from util.distribution import Distribution
+from util.pipeline import PipelineFunction
+
 
 class VideoMovementFeature(PipelineFunction):
 
@@ -48,10 +51,6 @@ class VideoMovementFeature(PipelineFunction):
 
     def close(self):
         pass
-
-
-    def complete(self):
-        return True  #self.process.exitcode is not None
 
     def weight_sources(self):
         # Examination of sliding window

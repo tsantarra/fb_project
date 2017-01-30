@@ -1,5 +1,4 @@
-from collections import deque, Counter
-from features.distribution import Distribution
+from util.distribution import Distribution
 
 
 class TestFeature:
@@ -11,6 +10,6 @@ class TestFeature:
         return Distribution({source_pair: 0 for source_pair in self.sources})
 
     def update(self):
-        return
+        pass
 
 
