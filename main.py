@@ -10,10 +10,13 @@ from functools import partial
 import cv2
 from numpy import zeros
 
+from features.audio_feature import AudioFeature
 from features.video_movement_feature import VideoMovementFeature
-from io_sources.data_output import OutputVideoStream, OutputAudioStream, OutputAudioFile, OutputVideoFile, join_audio_and_video
-from io_sources.data_sources import InputVideoStream, InputAudioStream, InputVideoFile, InputAudioFile
+from io_sources.data_output import OutputVideoStream, OutputAudioStream, OutputAudioFile, OutputVideoFile, \
+    join_audio_and_video
+from io_sources.data_sources import InputVideoStream, InputAudioStream, InputVideoFile, InputAudioFile, InputSourceTable
 from util.schedule import create_periodic_event
+from util.stream_selector import StreamSelector
 
 InputMediaStreams = namedtuple("InputMediaStreams", ["audio", "video", "main_audio"])
 OutputMediaStreams = namedtuple("OutputMediaStreams", ["audio", "video"])
@@ -41,79 +44,71 @@ def init():
     """
     Initializes system using parameters read from config file.
     """
-    params = parse_config_settings()
+    parameters = parse_config_settings()
 
-    # Streams of data
-    if params['MODE']['live_mode']:
-        input_audio = [InputAudioStream(id, sample_rate=global_sample_rate, dtype=global_dtype) for id in params['AUDIO']['active_microphone_ids']]
+    # Streams of input data
+    if parameters['MODE']['live_mode']:
+        input_audio = [InputAudioStream(id, sample_rate=global_sample_rate, dtype=global_dtype)
+                       for id in parameters['AUDIO']['active_microphone_ids']]
         main_audio_input = [stream for stream in input_audio
-                            if stream.id == params['OUTPUT_AUDIO']['audio_input_device_id']][0]
-        input_video = [InputVideoStream(id) for id in params['VIDEO']['active_camera_ids']]
+                            if stream.id == parameters['OUTPUT_AUDIO']['audio_input_device_id']][0]
+        input_video = [InputVideoStream(id) for id in parameters['VIDEO']['active_camera_ids']]
+
+        audio_video_pairs = {audio: video for audio, video in parameters['AUDIO_VIDEO']['microphone_camera_mapping']}
 
     else:
-        input_audio = [InputAudioFile(filename) for filename in params['AUDIO']['audio_filenames']]
-        main_audio_input = InputAudioFile(filename=params['AUDIO']['main_audio_file'])
-        input_video = [InputVideoFile(filename) for filename in params['VIDEO']['video_filenames']]
+        input_audio = [InputAudioFile(filename) for filename in parameters['AUDIO']['audio_filenames']]
+        main_audio_input = InputAudioFile(filename=parameters['AUDIO']['main_audio_file'])
+        input_video = [InputVideoFile(filename) for filename in parameters['VIDEO']['video_filenames']]
+
+        audio_video_pairs = {audio: video for audio, video in zip([file_stream.id for file_stream in input_audio],
+                                                                  [file_stream.id for file_stream in input_video])}
 
     inputs = InputMediaStreams(audio=input_audio, video=input_video, main_audio=main_audio_input)
 
-    # Features for selecting a stream
-    features = [VideoMovementFeature(inputs.video),
-                #AudioFeature(zip(inputs.audio, inputs.video)),
-                ]
-
     # Output streams
-    output_audio_streams = [OutputAudioStream(device_id=params['OUTPUT_AUDIO']['audio_output_device_id'],
+    output_audio_streams = [OutputAudioStream(device_id=parameters['OUTPUT_AUDIO']['audio_output_device_id'],
                                               input_stream=main_audio_input, sample_rate=global_sample_rate,
                                               dtype=global_dtype)]
 
     output_video_streams = [OutputVideoStream(stream_id=input_stream.id, input_stream=input_stream)
                             for input_stream in input_video]
 
-    if params['OUTPUT_AUDIO']['audio_file']:
-        output_audio_streams.append(OutputAudioFile(filename=params['OUTPUT_AUDIO']['audio_filename'],
+    # Output files
+    if parameters['OUTPUT_AUDIO']['audio_file']:
+        output_audio_streams.append(OutputAudioFile(filename=parameters['OUTPUT_AUDIO']['audio_filename'],
                                                     input_stream=main_audio_input,
                                                     sample_rate=global_sample_rate))
 
-    if params['OUTPUT_VIDEO']['video_file']:
-        output_video_streams.append(OutputVideoFile(filename=params['OUTPUT_VIDEO']['video_filename'],
+    if parameters['OUTPUT_VIDEO']['video_file']:
+        output_video_streams.append(OutputVideoFile(filename=parameters['OUTPUT_VIDEO']['video_filename'],
                                                     input_stream=input_video[0]))
 
     outputs = OutputMediaStreams(audio=output_audio_streams, video=output_video_streams)
 
-    # start everything
-    for process in set(inputs.audio + inputs.video + [inputs.main_audio] + features + outputs.audio + outputs.video):
-        process.start()
+    # Features for selecting a stream
+    movement_feature = VideoMovementFeature(feature_id='VMF', video_sources=inputs.video)
 
-    return inputs, features, outputs, params
+    audio_feature = AudioFeature(feature_id='F-Audio', audio_sources=inputs.audio,
+                                 audio_video_pair_map=audio_video_pairs)
+    feature_list = [movement_feature, audio_feature]
 
+    # Initialize stream selector
+    stream_selector = StreamSelector(inputs, feature_list, outputs)
+    stream_selector.start()
 
-def tick(sources, features, output_streams):
-    """
-        The meat of the system runs via this tick function. All sources and feature calculators should update (hopefully
-        keeping in sync. The computation of selecting a primary stream then occurs. It is yet unclear if output writing
-        should occur here or as part of a separate function.
-    """
-
-    # Update Sources
-    for source in set(sources.audio + sources.video + [sources.main_audio]):
-        source.update()
-
-    for output in set(output_streams.audio + output_streams.video):
-        output.update()
-
-    return
+    return stream_selector, parameters
 
 
-def halt_criteria(processes):
+def halt_criteria(selector):
     """ This function provides the necessary check for terminating the system loop. """
-    blank_image = zeros((30, 30, 3))
-    cv2.imshow('Exit', blank_image)
+    # display blank image
+    cv2.imshow('Exit', zeros((30, 30, 3)))
 
-    end = cv2.waitKey(10) == 27
+    # Check for end key press (esc)
+    end = (cv2.waitKey(10) == 27)
     if end:
-        for process in processes:
-            process.close()
+        selector.close()
 
     return end
 
@@ -123,14 +118,13 @@ if __name__ == '__main__':
 
     try:
         # Initialize system sources and features calculated over sources
-        sources, features, output_streams, params = init()
-        processes = set(sources.audio + sources.video + features + output_streams.audio + output_streams.video)
+        stream_selector, params = init()
 
         # Initialize scheduler and set to repeat calls indefinitely
-        system = create_periodic_event(interval=1/30,
-                                       action=tick,
-                                       action_args=(sources, features, output_streams),
-                                       halt_check=partial(halt_criteria, processes))
+        system = create_periodic_event(interval=1 / 30,
+                                       action=stream_selector.update,
+                                       action_args=(),
+                                       halt_check=partial(halt_criteria, stream_selector))
 
         # Execute
         system.run()

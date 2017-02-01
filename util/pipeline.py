@@ -1,21 +1,21 @@
 from multiprocessing import Process, Queue
 
 
-class PipelineFunction:
+class PipelineProcess:
     """ This class operates as an intermediate processing point between inputs and outputs. """
 
-    def __init__(self, target_function, params, sources, drop_frames=False):
+    def __init__(self, pipeline_id, target_function, params, sources, drop_input_frames=False, drop_output_frames=False):
         """ Initialize the synchronized objects and work process. """
-        size = 1 if drop_frames else 0
+        self.id = pipeline_id
 
-        self.input_queue = Queue(maxsize=size)
-        self.input_sources = sources
+        self._input_queue = Queue(maxsize=int(drop_input_frames))
+        self._input_sources = sources
 
-        self.output_queue = Queue(maxsize=size)
-        self.output_frame = None
+        self._output_queue = Queue(maxsize=int(drop_output_frames))
+        self._output = None
 
         self.process = Process(target=target_function,
-                               args=[self.input_queue, self.output_queue] + list(params))
+                               args=[self._input_queue, self._output_queue] + list(params))
 
     def start(self):
         """ Begin the work process. """
@@ -23,17 +23,17 @@ class PipelineFunction:
 
     def update(self):
         """ Update the inputs and outputs of the function. """
-        if self.input_sources:
-            self.input_queue.put([source.read() for source in self.input_sources])
+        if self._input_sources:
+            self._input_queue.put([source.read() for source in self._input_sources])
 
-        if self.output_queue.empty():
-            self.output_frame = None
+        if self._output_queue.empty():
+            self._output = (self.id, None)
         else:
-            self.output_frame = self.output_queue.get()
+            self._output = (self.id, self._output_queue.get())
 
     def read(self):
         """ Return the latest frame of data. """
-        return self.output_frame
+        return self._output
 
     def close(self):
         """ End the work process. """

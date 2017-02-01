@@ -4,7 +4,7 @@ import numpy
 import sounddevice
 import soundfile
 
-from util.pipeline import PipelineFunction
+from util.pipeline import PipelineProcess
 from util.schedule import create_periodic_event
 
 
@@ -16,18 +16,17 @@ class ReadFromOutputException(Exception):
 ###########################################################################################################
 
 
-class OutputVideoStream(PipelineFunction):
+class OutputVideoStream(PipelineProcess):
 
     def __init__(self, stream_id, input_stream, dimensions=(640, 480), interval=1 / 30):
-        self.id = str(stream_id)
-
-        super().__init__(target_function=OutputVideoStream.show_video,
+        super().__init__(pipeline_id='OVS-' + str(stream_id),
+                         target_function=OutputVideoStream.show_video,
                          params=(self.id, dimensions, interval),
                          sources=[input_stream],
                          drop_frames=True)
 
     def read(self):
-        raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
+        raise ReadFromOutputException('Attempted read from an output_files pipeline function.' + str(self.__class__))
 
     @staticmethod
     def show_video(input_queue, output_queue, stream_id, dimensions, interval):
@@ -46,13 +45,13 @@ class OutputVideoStream(PipelineFunction):
         scheduler.run()
 
 
-class OutputAudioStream(PipelineFunction):
+class OutputAudioStream(PipelineProcess):
 
     def __init__(self, device_id, input_stream, sample_rate, dtype, channels=1, latency='low', interval=1/30):
-        self.id = device_id
         self.input_stream = input_stream
 
-        super().__init__(target_function=OutputAudioStream.output_audio,
+        super().__init__(pipeline_id='OAS-' + str(device_id),
+                         target_function=OutputAudioStream.output_audio,
                          params=(device_id, channels, sample_rate, latency, dtype, interval),
                          sources=[input_stream],
                          drop_frames=True)
@@ -61,10 +60,10 @@ class OutputAudioStream(PipelineFunction):
         data = self.input_stream.read()
 
         if type(data) == numpy.ndarray:
-            self.input_queue.put(data)
+            self._input_queue.put(data)
 
     def read(self):
-        raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
+        raise ReadFromOutputException('Attempted read from an output_files pipeline function.' + str(self.__class__))
 
     @staticmethod
     def output_audio(input_queue, output_queue, device_id, channels, sample_rate, latency, dtype, interval):
@@ -92,13 +91,14 @@ class OutputAudioStream(PipelineFunction):
 ###########################################################################################################
 
 
-class OutputVideoFile(PipelineFunction):
+class OutputVideoFile(PipelineProcess):
 
     def __init__(self, filename, input_stream, video_fps=30, dimensions=(640, 480), interval=1/30):
         self.filename = filename
         self.input_stream = input_stream
 
-        super().__init__(target_function=OutputVideoFile.output_video,
+        super().__init__(pipeline_id='OVF-' + str(filename),
+                         target_function=OutputVideoFile.output_video,
                          params=(filename, video_fps, dimensions, interval),
                          sources=None,
                          drop_frames=False)
@@ -107,10 +107,10 @@ class OutputVideoFile(PipelineFunction):
         frame = self.input_stream.read()
 
         if type(frame) == numpy.ndarray:
-            self.input_queue.put(frame)
+            self._input_queue.put(frame)
 
     def read(self):
-        raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
+        raise ReadFromOutputException('Attempted read from an output_files pipeline function.' + str(self.__class__))
 
     @staticmethod
     def output_video(input_queue, output_queue, filename, video_fps, dimensions, interval):
@@ -134,12 +134,13 @@ class OutputVideoFile(PipelineFunction):
         scheduler.run()
 
 
-class OutputAudioFile(PipelineFunction):
+class OutputAudioFile(PipelineProcess):
 
     def __init__(self, filename, input_stream, sample_rate, channels=1, interval=1/30):
         self.input_stream = input_stream
 
-        super().__init__(target_function=OutputAudioFile.output_audio,
+        super().__init__(pipeline_id='OAF-' + str(filename),
+                         target_function=OutputAudioFile.output_audio,
                          params=(filename, sample_rate, channels, interval),
                          sources=[input_stream],
                          drop_frames=True)
@@ -148,10 +149,10 @@ class OutputAudioFile(PipelineFunction):
         data = self.input_stream.read()
 
         if type(data) == numpy.ndarray:
-            self.input_queue.put(data)
+            self._input_queue.put(data)
 
     def read(self):
-        raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
+        raise ReadFromOutputException('Attempted read from an output_files pipeline function.' + str(self.__class__))
 
     @staticmethod
     def output_audio(input_queue, output_queue, filename, sample_rate, channels, interval):
@@ -179,6 +180,6 @@ class OutputAudioFile(PipelineFunction):
 
 
 def join_audio_and_video(audio_filename, video_filename):
-    cmd = 'ffmpeg -y -i ' + video_filename + ' -i ' + audio_filename + ' -shortest -async 1 -vsync 1 -codec copy output/output.avi'
+    cmd = 'ffmpeg -y -i ' + video_filename + ' -i ' + audio_filename + ' -shortest -async 1 -vsync 1 -codec copy output_files/output_files.avi'
     # flags  -codec copy
     subprocess.call(cmd, shell=True)

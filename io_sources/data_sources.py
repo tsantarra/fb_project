@@ -4,16 +4,26 @@ import sounddevice
 
 from collections import Mapping
 
-from util.pipeline import PipelineFunction
+from util.pipeline import PipelineProcess
 from util.schedule import create_periodic_event
 
 
-class InputManager(Mapping):
+class InputSourceTable(Mapping):
+    """ Acts as an immutable storage container for the input sources. """
 
-    def __init__(self):
-        pass
+    def __init__(self, sources_dict, video_audio_id_pairs):
+        self.__sources = sources_dict  # type -> id -> object
+        self.video_audio_map = {video: audio for video, audio in video_audio_id_pairs}
+        self.audio_video_map = {audio: video for video, audio in video_audio_id_pairs}
 
+    def __getitem__(self, item):
+        return self.__sources.__getitem__(item)
 
+    def __iter__(self):
+        return self.__sources.__iter__()
+
+    def __len__(self):
+        return self.__sources.__len__()
 
 
 ###########################################################################################################
@@ -21,12 +31,11 @@ class InputManager(Mapping):
 ###########################################################################################################
 
 
-class InputAudioStream(PipelineFunction):
+class InputAudioStream(PipelineProcess):
 
     def __init__(self, device_id, sample_rate, dtype, interval=1/30):
-        self.id = device_id
-
-        super().__init__(target_function=InputAudioStream.stream_audio,
+        super().__init__(pipeline_id='AS-' + str(device_id),
+                         target_function=InputAudioStream.stream_audio,
                          params=(device_id, sample_rate, dtype, interval),
                          sources=None,
                          drop_frames=True)
@@ -34,8 +43,8 @@ class InputAudioStream(PipelineFunction):
     def update(self):
         # Note: Could possibly drop frames here if needed.
         frame = None
-        while not self.output_queue.empty():
-            new_frame = self.output_queue.get()
+        while not self._output_queue.empty():
+            new_frame = self._output_queue.get()
 
             if frame is None:
                 frame = new_frame
@@ -61,13 +70,11 @@ class InputAudioStream(PipelineFunction):
         scheduler.run()
 
 
-class InputVideoStream(PipelineFunction):
+class InputVideoStream(PipelineProcess):
 
     def __init__(self, device_id, input_interval=1/30):
-        self.id = device_id
-        self.interval = input_interval
-
-        super().__init__(target_function=InputVideoStream.stream_video,
+        super().__init__(pipeline_id='VS-' + str(device_id),
+                         target_function=InputVideoStream.stream_video,
                          params=(device_id, input_interval),
                          sources=None,
                          drop_frames=True)
@@ -96,12 +103,11 @@ class InputVideoStream(PipelineFunction):
 ###########################################################################################################
 
 
-class InputAudioFile(PipelineFunction):
+class InputAudioFile(PipelineProcess):
 
     def __init__(self, filename, interval=1/30):
-        self.filename = filename
-
-        super().__init__(target_function=InputAudioFile.read_from_file,
+        super().__init__(pipeline_id='AF-' + filename,
+                         target_function=InputAudioFile.read_from_file,
                          params=(filename, interval),
                          sources=None,
                          drop_frames=True)
@@ -109,8 +115,8 @@ class InputAudioFile(PipelineFunction):
     def update(self):
         # Note: Could possibly drop frames here if needed.
         frame = None
-        while not self.output_queue.empty():
-            new_frame, flag, status = self.output_queue.get()
+        while not self._output_queue.empty():
+            new_frame, flag, status = self._output_queue.get()
 
             if frame is None:
                 frame = new_frame
@@ -138,12 +144,11 @@ class InputAudioFile(PipelineFunction):
         scheduler.run()
 
 
-class InputVideoFile(PipelineFunction):
+class InputVideoFile(PipelineProcess):
 
     def __init__(self, filename, interval=1/30):
-        self.filename = filename
-
-        super().__init__(target_function=InputVideoFile.read_file(),
+        super().__init__(pipeline_id='VF-' + filename,
+                         target_function=InputVideoFile.read_file(),
                          params=(filename, interval),
                          sources=None,
                          drop_frames=False)

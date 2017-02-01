@@ -1,19 +1,15 @@
 Outline of system architecture:
-    Data is input via sources (either streams or static files, both of which can be treated as generators)
+    Data is input via sources (either streams or static files)
     Sources are fed to feature evaluators, which return weights on what each thinks is important
     The main level system aggregates weights and selects a stream as the primary data source
 
 ===================================================================================
 
 TODO
-    - feature calculations as pipeline functions
-        - separate processes
-        - need to figure out what to do with lengthy calculations; drop frames?
     - vote tallying aggregator/multiplexer
         - one object holds references to all sources
         - one object manages all features; tallies votes (weighted); assigns output feed
-    - termination
-    - flexible initialization?
+    - flexible initialization (weights, features from config)
 
 Synchronization:
     - separate processes for input and output need to align

@@ -42,9 +42,9 @@ class Distribution(dict):
 
         return new_dist.normalize()
 
-    def add_distribution(self, other_distribution):
+    def __add__(self, other_distribution):
         """
-        Given a set of conditional probabilities, the distribution updates itself via Bayes' rule.
+        Sums two distributions across keys.
         """
         assert self.keys() == other_distribution.keys(), \
             'Conditional probabilities keys do not map to distribution.\n' + \
@@ -56,6 +56,13 @@ class Distribution(dict):
             new_dist[key] += other_distribution[key]
 
         return new_dist
+
+    def __radd__(self, other):
+        """ Reverse add for cases when using 'sum' over Distributions. """
+        if other == 0:  # When using 'sum', the first operation tries 0 + obj, then obj + 0
+            return self
+        else:
+            return self.__add__(other)
 
     def normalize(self):
         """
