@@ -17,8 +17,8 @@ class StreamSelector:
             - tally
             - direct output stream
         """
-        votes = [feature.read() for feature in self.features]
-        assert all(type(vote) == Distribution for vote in votes)
+        votes = [feature.read().data for feature in self.features]
+        assert all(type(vote) == Distribution for vote in votes), '\n'.join([type(vote) for vote in votes])
 
         tally = sum(votes)
         max_vote = max(tally, key=lambda v: tally[v])

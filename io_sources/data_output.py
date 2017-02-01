@@ -21,12 +21,13 @@ class OutputVideoStream(PipelineProcess):
     def __init__(self, stream_id, input_stream, dimensions=(640, 480), interval=1 / 30):
         super().__init__(pipeline_id='OVS-' + str(stream_id),
                          target_function=OutputVideoStream.show_video,
-                         params=(self.id, dimensions, interval),
+                         params=(stream_id, dimensions, interval),
                          sources=[input_stream],
-                         drop_frames=True)
+                         drop_input_frames=True,
+                         drop_output_frames=True)
 
     def read(self):
-        raise ReadFromOutputException('Attempted read from an output_files pipeline function.' + str(self.__class__))
+        raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
 
     @staticmethod
     def show_video(input_queue, output_queue, stream_id, dimensions, interval):
@@ -54,7 +55,8 @@ class OutputAudioStream(PipelineProcess):
                          target_function=OutputAudioStream.output_audio,
                          params=(device_id, channels, sample_rate, latency, dtype, interval),
                          sources=[input_stream],
-                         drop_frames=True)
+                         drop_input_frames=True,
+                         drop_output_frames=True)
 
     def update(self):
         data = self.input_stream.read()
@@ -63,7 +65,7 @@ class OutputAudioStream(PipelineProcess):
             self._input_queue.put(data)
 
     def read(self):
-        raise ReadFromOutputException('Attempted read from an output_files pipeline function.' + str(self.__class__))
+        raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
 
     @staticmethod
     def output_audio(input_queue, output_queue, device_id, channels, sample_rate, latency, dtype, interval):
@@ -101,7 +103,8 @@ class OutputVideoFile(PipelineProcess):
                          target_function=OutputVideoFile.output_video,
                          params=(filename, video_fps, dimensions, interval),
                          sources=None,
-                         drop_frames=False)
+                         drop_input_frames=False,
+                         drop_output_frames=False)
 
     def update(self):
         frame = self.input_stream.read()
@@ -110,7 +113,7 @@ class OutputVideoFile(PipelineProcess):
             self._input_queue.put(frame)
 
     def read(self):
-        raise ReadFromOutputException('Attempted read from an output_files pipeline function.' + str(self.__class__))
+        raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
 
     @staticmethod
     def output_video(input_queue, output_queue, filename, video_fps, dimensions, interval):
@@ -143,7 +146,8 @@ class OutputAudioFile(PipelineProcess):
                          target_function=OutputAudioFile.output_audio,
                          params=(filename, sample_rate, channels, interval),
                          sources=[input_stream],
-                         drop_frames=True)
+                         drop_input_frames=False,
+                         drop_output_frames=False)
 
     def update(self):
         data = self.input_stream.read()
@@ -152,7 +156,7 @@ class OutputAudioFile(PipelineProcess):
             self._input_queue.put(data)
 
     def read(self):
-        raise ReadFromOutputException('Attempted read from an output_files pipeline function.' + str(self.__class__))
+        raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
 
     @staticmethod
     def output_audio(input_queue, output_queue, filename, sample_rate, channels, interval):
@@ -180,6 +184,6 @@ class OutputAudioFile(PipelineProcess):
 
 
 def join_audio_and_video(audio_filename, video_filename):
-    cmd = 'ffmpeg -y -i ' + video_filename + ' -i ' + audio_filename + ' -shortest -async 1 -vsync 1 -codec copy output_files/output_files.avi'
+    cmd = 'ffmpeg -y -i ' + video_filename + ' -i ' + audio_filename + ' -shortest -async 1 -vsync 1 -codec copy output_files/output.avi'
     # flags  -codec copy
     subprocess.call(cmd, shell=True)

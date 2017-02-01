@@ -1,4 +1,5 @@
 from collections import deque, Counter
+from queue import Empty
 
 from util.distribution import Distribution
 from util.pipeline import PipelineProcess
@@ -28,7 +29,14 @@ class AudioFeature(PipelineProcess):
 
             # Initial conditions
             if not last_frames:
-                last_frames = {source_id: frame for source_id, frame in input_queue}
+                frames = []
+                while True:
+                    try:
+                        frames.append(input_queue.get_nowait())
+                    except Empty:
+                        break
+
+                last_frames = {source_id: frame for source_id, frame in frames}
                 return
             else:
                 # Progress tracking vars

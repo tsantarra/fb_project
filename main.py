@@ -51,7 +51,7 @@ def init():
         input_audio = [InputAudioStream(id, sample_rate=global_sample_rate, dtype=global_dtype)
                        for id in parameters['AUDIO']['active_microphone_ids']]
         main_audio_input = [stream for stream in input_audio
-                            if stream.id == parameters['OUTPUT_AUDIO']['audio_input_device_id']][0]
+                            if stream.source_id == parameters['OUTPUT_AUDIO']['audio_input_device_id']][0]
         input_video = [InputVideoStream(id) for id in parameters['VIDEO']['active_camera_ids']]
 
         audio_video_pairs = {audio: video for audio, video in parameters['AUDIO_VIDEO']['microphone_camera_mapping']}

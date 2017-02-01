@@ -1,124 +1,13 @@
-DEBUG:root:Tick at time 1485564485.8420742
-DEBUG:root:Tick at time 1485564485.888145
-DEBUG:root:Tick at time 1485564486.6693468
-DEBUG:root:Tick at time 1485564486.7169206
-DEBUG:root:Tick at time 1485564486.7639928
-DEBUG:root:Tick at time 1485564486.8095627
-DEBUG:root:Tick at time 1485564486.8566349
-DEBUG:root:Tick at time 1485564486.9037247
-DEBUG:root:Tick at time 1485564486.9507985
-DEBUG:root:Tick at time 1485564486.997852
-DEBUG:root:Tick at time 1485564487.0449245
-DEBUG:root:Tick at time 1485564487.091997
-DEBUG:root:Tick at time 1485564487.1375835
-DEBUG:root:Tick at time 1485564487.1856582
-DEBUG:root:Tick at time 1485564487.2317119
-DEBUG:root:Tick at time 1485564487.2792904
-DEBUG:root:Tick at time 1485564487.3263574
-DEBUG:root:Tick at time 1485564487.3719277
-DEBUG:root:Tick at time 1485564487.419518
-DEBUG:root:Tick at time 1485564487.4665904
-DEBUG:root:Tick at time 1485564487.5131621
-DEBUG:root:Tick at time 1485564487.5607336
-DEBUG:root:Tick at time 1485564487.6068063
-DEBUG:root:Tick at time 1485564487.6543622
-DEBUG:root:Tick at time 1485564487.7004504
-DEBUG:root:Tick at time 1485564487.7475228
-DEBUG:root:Tick at time 1485564487.794087
-DEBUG:root:Tick at time 1485564487.8411665
-DEBUG:root:Tick at time 1485564487.8882215
-DEBUG:root:Tick at time 1485564487.9347935
-DEBUG:root:Tick at time 1485564487.9818656
-DEBUG:root:Tick at time 1485564488.0284374
-DEBUG:root:Tick at time 1485564488.0750263
-DEBUG:root:Tick at time 1485564488.1220937
-DEBUG:root:Tick at time 1485564488.1696718
-DEBUG:root:Tick at time 1485564488.2157254
-DEBUG:root:Tick at time 1485564488.263299
-DEBUG:root:Tick at time 1485564488.3098884
-DEBUG:root:Tick at time 1485564488.357456
-DEBUG:root:Tick at time 1485564488.404516
-DEBUG:root:Tick at time 1485564488.450086
-DEBUG:root:Tick at time 1485564488.497481
-DEBUG:root:Tick at time 1485564488.5440605
-DEBUG:root:Tick at time 1485564488.5916474
-DEBUG:root:Tick at time 1485564488.6381433
-DEBUG:root:Tick at time 1485564488.6860588
-DEBUG:root:Tick at time 1485564488.7323318
-DEBUG:root:Tick at time 1485564488.7788115
-DEBUG:root:Tick at time 1485564488.825536
-DEBUG:root:Tick at time 1485564488.873183
-DEBUG:root:Tick at time 1485564488.9195688
-DEBUG:root:Tick at time 1485564488.9664164
-DEBUG:root:Tick at time 1485564489.0136268
-DEBUG:root:Tick at time 1485564489.0604825
-DEBUG:root:Tick at time 1485564489.1068451
-DEBUG:root:Tick at time 1485564489.1539838
-DEBUG:root:Tick at time 1485564489.20076
-DEBUG:root:Tick at time 1485564489.2469218
-DEBUG:root:Tick at time 1485564489.294088
-DEBUG:root:Tick at time 1485564489.3411624
-DEBUG:root:Tick at time 1485564489.400239
-DEBUG:root:Tick at time 1485564489.435794
-DEBUG:root:Tick at time 1485564489.482309
-DEBUG:root:Tick at time 1485564489.52878
-DEBUG:root:Tick at time 1485564489.575073
-DEBUG:root:Tick at time 1485564489.6225486
-DEBUG:root:Tick at time 1485564489.6693807
-DEBUG:root:Tick at time 1485564489.7164936
-DEBUG:root:Tick at time 1485564489.76371
-DEBUG:root:Tick at time 1485564489.8094544
-DEBUG:root:Tick at time 1485564489.8563583
-DEBUG:root:Tick at time 1485564489.9040568
-DEBUG:root:Tick at time 1485564489.9500375
-DEBUG:root:Tick at time 1485564489.9970825
-DEBUG:root:Tick at time 1485564490.0449347
-DEBUG:root:Tick at time 1485564490.0907884
-DEBUG:root:Tick at time 1485564490.1384077
-DEBUG:root:Tick at time 1485564490.1854079
-DEBUG:root:Tick at time 1485564490.2321396
-DEBUG:root:Tick at time 1485564490.2796364
-DEBUG:root:Tick at time 1485564490.3264823
-DEBUG:root:Tick at time 1485564490.373455
-DEBUG:root:Tick at time 1485564490.4192042
-DEBUG:root:Tick at time 1485564490.46708
-DEBUG:root:Tick at time 1485564490.5134082
-DEBUG:root:Tick at time 1485564490.560139
-DEBUG:root:Tick at time 1485564490.6071784
-DEBUG:root:Tick at time 1485564490.653551
-DEBUG:root:Tick at time 1485564490.7019737
-DEBUG:root:Tick at time 1485564490.7470257
-DEBUG:root:Tick at time 1485564490.7952335
-DEBUG:root:Tick at time 1485564490.8414109
-DEBUG:root:Tick at time 1485564490.887709
-DEBUG:root:Tick at time 1485564490.9347594
-DEBUG:root:Tick at time 1485564490.9818566
-DEBUG:root:Tick at time 1485564491.0281546
-DEBUG:root:Tick at time 1485564491.07533
-DEBUG:root:Tick at time 1485564491.1228242
-DEBUG:root:Tick at time 1485564491.1700199
-DEBUG:root:Tick at time 1485564491.21701
-DEBUG:root:Tick at time 1485564491.2626233
-DEBUG:root:Tick at time 1485564491.3099875
-DEBUG:root:Tick at time 1485564491.3565326
-DEBUG:root:Tick at time 1485564491.4034495
-DEBUG:root:Tick at time 1485564491.4508746
-DEBUG:root:Tick at time 1485564491.4981985
-DEBUG:root:Tick at time 1485564491.5442283
-DEBUG:root:Tick at time 1485564491.5916684
-DEBUG:root:Tick at time 1485564491.637958
-DEBUG:root:Tick at time 1485564491.6845033
-DEBUG:root:Tick at time 1485564491.7319887
-DEBUG:root:Tick at time 1485564491.7782514
-DEBUG:root:Tick at time 1485564491.8256729
-DEBUG:root:Tick at time 1485564491.8729973
-DEBUG:root:Tick at time 1485564491.9189856
-DEBUG:root:Tick at time 1485564491.9668808
-DEBUG:root:Tick at time 1485564492.0127318
-DEBUG:root:Tick at time 1485564492.059883
-DEBUG:root:Tick at time 1485564492.1063929
-DEBUG:root:Tick at time 1485564492.154348
-DEBUG:root:Tick at time 1485564492.200861
-DEBUG:root:Tick at time 1485564492.2483964
-DEBUG:root:Tick at time 1485564492.294599
-DEBUG:root:Tick at time 1485564492.3412528
+ERROR:root:Error.
+Traceback (most recent call last):
+  File "C:/Users/Trevor/Documents/GitHub/fb_project/main.py", line 127, in <module>
+    halt_check=partial(halt_criteria, stream_selector))
+  File "C:\Users\Trevor\Documents\GitHub\fb_project\util\schedule.py", line 25, in create_periodic_event
+    periodic(scheduler=scheduler, interval=interval, action=action, action_args=action_args, halt_check=halt_check)
+  File "C:\Users\Trevor\Documents\GitHub\fb_project\util\schedule.py", line 20, in periodic
+    action(*action_args)
+  File "C:\Users\Trevor\Documents\GitHub\fb_project\util\stream_selector.py", line 20, in update
+    votes = [feature.read().data for feature in self.features]
+  File "C:\Users\Trevor\Documents\GitHub\fb_project\util\stream_selector.py", line 20, in <listcomp>
+    votes = [feature.read().data for feature in self.features]
+AttributeError: 'NoneType' object has no attribute 'data'

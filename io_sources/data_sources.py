@@ -34,11 +34,13 @@ class InputSourceTable(Mapping):
 class InputAudioStream(PipelineProcess):
 
     def __init__(self, device_id, sample_rate, dtype, interval=1/30):
+        self.source_id = device_id
         super().__init__(pipeline_id='AS-' + str(device_id),
                          target_function=InputAudioStream.stream_audio,
                          params=(device_id, sample_rate, dtype, interval),
                          sources=None,
-                         drop_frames=True)
+                         drop_input_frames=True,
+                         drop_output_frames=True)
 
     def update(self):
         # Note: Could possibly drop frames here if needed.
@@ -73,11 +75,13 @@ class InputAudioStream(PipelineProcess):
 class InputVideoStream(PipelineProcess):
 
     def __init__(self, device_id, input_interval=1/30):
+        self.source_id = device_id
         super().__init__(pipeline_id='VS-' + str(device_id),
                          target_function=InputVideoStream.stream_video,
                          params=(device_id, input_interval),
                          sources=None,
-                         drop_frames=True)
+                         drop_input_frames=True,
+                         drop_output_frames=True)
 
     @staticmethod
     def stream_video(input_queue, output_queue, device_id, interval):
@@ -106,11 +110,13 @@ class InputVideoStream(PipelineProcess):
 class InputAudioFile(PipelineProcess):
 
     def __init__(self, filename, interval=1/30):
+        self.source_id = filename
         super().__init__(pipeline_id='AF-' + filename,
                          target_function=InputAudioFile.read_from_file,
                          params=(filename, interval),
                          sources=None,
-                         drop_frames=True)
+                         drop_input_frames=False,
+                         drop_output_frames=False)
 
     def update(self):
         # Note: Could possibly drop frames here if needed.
@@ -147,11 +153,13 @@ class InputAudioFile(PipelineProcess):
 class InputVideoFile(PipelineProcess):
 
     def __init__(self, filename, interval=1/30):
+        self.source_id = filename
         super().__init__(pipeline_id='VF-' + filename,
                          target_function=InputVideoFile.read_file(),
                          params=(filename, interval),
                          sources=None,
-                         drop_frames=False)
+                         drop_input_frames=False,
+                         drop_output_frames=False)
 
     @staticmethod
     def read_file(input_queue, output_queue, filename, interval):

@@ -1,5 +1,7 @@
 from multiprocessing import Process, Queue
+from collections import namedtuple
 
+PipelineData = namedtuple('PipelineData', ['source_id', 'data'])
 
 class PipelineProcess:
     """ This class operates as an intermediate processing point between inputs and outputs. """
@@ -27,9 +29,9 @@ class PipelineProcess:
             self._input_queue.put([source.read() for source in self._input_sources])
 
         if self._output_queue.empty():
-            self._output = (self.id, None)
+            self._output = PipelineData(self.id, None)
         else:
-            self._output = (self.id, self._output_queue.get())
+            self._output = PipelineData(self.id, self._output_queue.get())
 
     def read(self):
         """ Return the latest frame of data. """
