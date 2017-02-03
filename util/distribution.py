@@ -46,14 +46,14 @@ class Distribution(dict):
         """
         Sums two distributions across keys.
         """
-        assert self.keys() == other_distribution.keys(), \
-            'Conditional probabilities keys do not map to distribution.\n' + \
-            str(set(other_distribution.keys())) + ' != ' + str(self.keys())
+        #assert self.keys() == other_distribution.keys(), \
+        #    'Conditional probabilities keys do not map to distribution.\n' + \
+        #    str(set(other_distribution.keys())) + ' != ' + str(self.keys())
 
-        new_dist = Distribution(self.copy())
+        new_dist = Distribution()
 
-        for key in other_distribution:
-            new_dist[key] += other_distribution[key]
+        for key in self.keys() | other_distribution.keys():
+            new_dist[key] = self.get(key, 0.0) + other_distribution.get(key, 0.0)
 
         return new_dist
 

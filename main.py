@@ -14,7 +14,7 @@ from features.audio_feature import AudioFeature
 from features.video_movement_feature import VideoMovementFeature
 from io_sources.data_output import OutputVideoStream, OutputAudioStream, OutputAudioFile, OutputVideoFile, \
     join_audio_and_video
-from io_sources.data_sources import InputVideoStream, InputAudioStream, InputVideoFile, InputAudioFile, InputSourceTable
+from io_sources.data_sources import InputVideoStream, InputAudioStream, InputVideoFile, InputAudioFile
 from util.schedule import create_periodic_event
 from util.stream_selector import StreamSelector
 
@@ -54,7 +54,7 @@ def init():
                             if stream.source_id == parameters['OUTPUT_AUDIO']['audio_input_device_id']][0]
         input_video = [InputVideoStream(id) for id in parameters['VIDEO']['active_camera_ids']]
 
-        audio_video_pairs = {audio: video for audio, video in parameters['AUDIO_VIDEO']['microphone_camera_mapping']}
+        audio_video_pairs = {audio.id: video.id for audio, video in zip(input_audio, input_video)}
 
     else:
         input_audio = [InputAudioFile(filename) for filename in parameters['AUDIO']['audio_filenames']]

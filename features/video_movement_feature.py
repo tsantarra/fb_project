@@ -6,6 +6,8 @@ from util.distribution import Distribution
 from util.pipeline import PipelineProcess
 from util.schedule import create_periodic_event
 
+from queue import Empty
+
 
 class VideoMovementFeature(PipelineProcess):
     """
@@ -33,14 +35,21 @@ class VideoMovementFeature(PipelineProcess):
 
             # Initial conditions
             if not last_frames:
-                last_frames = {source_id: frame for source_id, frame in input_queue}
+                frames = []
+                while True:
+                    try:
+                        frames.append(input_queue.get_nowait())
+                    except Empty:
+                        break
+
+                last_frames = {source_id: frame for source_id, frame in frames}
                 return
             else:
                 # Progress tracking vars
                 time_since_switch += 1
 
             # Collect new frames
-            new_frames = {source_id: frame for source_id, frame in input_queue}
+            new_frames = {source_id: frame for source_id, frame in input_queue.get()}
 
             # Calculated diffs between new and last frames
             diffs = {source: cv2.absdiff(new_frames[source], last_frames[source]) for source in new_frames

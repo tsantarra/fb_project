@@ -13,7 +13,7 @@ class AudioFeature(PipelineProcess):
                          target_function=AudioFeature.establish_process_loop,
                          params=(audio_video_pair_map, window_length, thrash_limit),
                          sources=audio_sources,
-                         drop_input_frames=False,
+                         drop_input_frames=True,
                          drop_output_frames=True)
 
     @staticmethod
@@ -29,21 +29,16 @@ class AudioFeature(PipelineProcess):
 
             # Initial conditions
             if not last_frames:
-                frames = []
-                while True:
-                    try:
-                        frames.append(input_queue.get_nowait())
-                    except Empty:
-                        break
 
-                last_frames = {source_id: frame for source_id, frame in frames}
+                last_frames = {source_id: frame for source_id, frame in input_queue.get()}
                 return
             else:
                 # Progress tracking vars
                 time_since_switch += 1
 
             # Append max source
-            source_audio = {source_id: audio_frame for source_id, audio_frame in input_queue}
+            source_audio = {source_id: (audio_frame if audio_frame is not None else [])
+                            for source_id, audio_frame in input_queue.get()}
             window.append(max(source_audio, key=lambda id: max(source_audio[id], default=0)))
 
             # Examination of sliding window
@@ -58,7 +53,7 @@ class AudioFeature(PipelineProcess):
 
             # Vote distribution
             selected_video = audio_video_pair_map[last_selected]
-            vote = Distribution({video_source: 0 for audio_source, video_source in audio_video_pair_map})
+            vote = Distribution({video_source: 0 for audio_source, video_source in audio_video_pair_map.items()})
             vote[selected_video] = 1.0
             output_queue.put(vote)
 

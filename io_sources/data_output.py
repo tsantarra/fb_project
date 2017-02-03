@@ -7,6 +7,8 @@ import soundfile
 from util.pipeline import PipelineProcess
 from util.schedule import create_periodic_event
 
+from queue import Empty
+
 
 class ReadFromOutputException(Exception):
     pass
@@ -29,18 +31,25 @@ class OutputVideoStream(PipelineProcess):
     def read(self):
         raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
 
+    def update(self):
+        """ Only one source. No output. """
+        self._input_queue.put(self._input_sources[0].read())
+
     @staticmethod
     def show_video(input_queue, output_queue, stream_id, dimensions, interval):
         import cv2
+        last_frame = numpy.zeros((480, 640, 3), dtype='uint8')
 
         def display_video_frame():
+            nonlocal last_frame
             if not input_queue.empty():
-                inputs = input_queue.get()
-                frame = inputs[0]
+                pipeline_input = input_queue.get()
 
-                if type(frame) == numpy.ndarray:
-                    cv2.imshow(stream_id, cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA))
-                    cv2.waitKey(1)
+                if type(pipeline_input.data) == numpy.ndarray:
+                    last_frame = pipeline_input.data
+
+                cv2.imshow(stream_id, cv2.resize(last_frame, dimensions, interpolation=cv2.INTER_AREA))
+                cv2.waitKey(1)
 
         scheduler = create_periodic_event(interval=interval, action=display_video_frame)
         scheduler.run()
@@ -49,8 +58,6 @@ class OutputVideoStream(PipelineProcess):
 class OutputAudioStream(PipelineProcess):
 
     def __init__(self, device_id, input_stream, sample_rate, dtype, channels=1, latency='low', interval=1/30):
-        self.input_stream = input_stream
-
         super().__init__(pipeline_id='OAS-' + str(device_id),
                          target_function=OutputAudioStream.output_audio,
                          params=(device_id, channels, sample_rate, latency, dtype, interval),
@@ -59,10 +66,8 @@ class OutputAudioStream(PipelineProcess):
                          drop_output_frames=True)
 
     def update(self):
-        data = self.input_stream.read()
-
-        if type(data) == numpy.ndarray:
-            self._input_queue.put(data)
+        """ Only one source. No output. """
+        self._input_queue.put(self._input_sources[0].read())
 
     def read(self):
         raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
@@ -74,16 +79,27 @@ class OutputAudioStream(PipelineProcess):
 
         def write_audio_frames():
             frame = None
-            while not input_queue.empty():
-                new_frame = input_queue.get()
 
+            # collect all data in queue
+            frames = []
+            while True:
+                try:
+                    frames.append(input_queue.get_nowait())
+                except Empty:
+                    break
+
+            for pipeline_input in frames:
                 if frame is None:
-                    frame = new_frame
+                    frame = pipeline_input.data
+                    print(frame)
                 else:
-                    frame = numpy.append(frame, new_frame)
+                    frame = numpy.append(frame, pipeline_input.data)
+                    print('appended\n', frame)
 
             if frame is not None:
+                print('write audio')
                 stream.write(frame)
+
 
         scheduler = create_periodic_event(interval=interval, action=write_audio_frames)
         scheduler.run()
@@ -97,20 +113,17 @@ class OutputVideoFile(PipelineProcess):
 
     def __init__(self, filename, input_stream, video_fps=30, dimensions=(640, 480), interval=1/30):
         self.filename = filename
-        self.input_stream = input_stream
 
         super().__init__(pipeline_id='OVF-' + str(filename),
                          target_function=OutputVideoFile.output_video,
                          params=(filename, video_fps, dimensions, interval),
-                         sources=None,
+                         sources=[input_stream],
                          drop_input_frames=False,
                          drop_output_frames=False)
 
     def update(self):
-        frame = self.input_stream.read()
-
-        if type(frame) == numpy.ndarray:
-            self._input_queue.put(frame)
+        """ One input. No output. """
+        self._input_queue.put(self._input_sources[0].read())
 
     def read(self):
         raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
@@ -122,16 +135,16 @@ class OutputVideoFile(PipelineProcess):
 
         # Necessary part: we need a container to store the last frame, which we can duplicate when we don't have
         # new frames incoming. This avoids dropping frames in a video where we can't adjust the fps.
-        last_frame = [numpy.zeros((480, 640, 3), dtype='uint8')]
+        last_frame = numpy.zeros((480, 640, 3), dtype='uint8')
 
         def write_video_frames():
+            nonlocal last_frame
             if not input_queue.empty():
-                frame = input_queue.get()
-                last_frame[0] = frame
-            else:
-                frame = last_frame[0]
+                pipeline_input = input_queue.get()
+                if type(pipeline_input.data) == numpy.ndarray:
+                    last_frame = pipeline_input.data
 
-            stream.write(cv2.resize(frame, dimensions, interpolation=cv2.INTER_AREA))
+            stream.write(cv2.resize(last_frame, dimensions, interpolation=cv2.INTER_AREA))
 
         scheduler = create_periodic_event(interval=interval, action=write_video_frames)
         scheduler.run()
@@ -140,8 +153,6 @@ class OutputVideoFile(PipelineProcess):
 class OutputAudioFile(PipelineProcess):
 
     def __init__(self, filename, input_stream, sample_rate, channels=1, interval=1/30):
-        self.input_stream = input_stream
-
         super().__init__(pipeline_id='OAF-' + str(filename),
                          target_function=OutputAudioFile.output_audio,
                          params=(filename, sample_rate, channels, interval),
@@ -150,10 +161,8 @@ class OutputAudioFile(PipelineProcess):
                          drop_output_frames=False)
 
     def update(self):
-        data = self.input_stream.read()
-
-        if type(data) == numpy.ndarray:
-            self._input_queue.put(data)
+        """ One input. No outputs. """
+        self._input_queue.put(self._input_sources[0].read())
 
     def read(self):
         raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
@@ -164,15 +173,25 @@ class OutputAudioFile(PipelineProcess):
 
         def write_audio_frames():
             frame = None
-            while not input_queue.empty():
-                new_frame = input_queue.get()
 
+            # collect all data in queue
+            frames = []
+            while True:
+                try:
+                    frames.append(input_queue.get_nowait())
+                except Empty:
+                    break
+
+            for pipeline_input in frames:
                 if frame is None:
-                    frame = new_frame
+                    frame = pipeline_input.data
+                    print(frame)
                 else:
-                    frame = numpy.append(frame, new_frame)
+                    frame = numpy.append(frame, pipeline_input.data)
+                    print('appended\n', frame)
 
             if frame is not None:
+                print('write audio')
                 stream.write(frame)
 
         scheduler = create_periodic_event(interval=interval, action=write_audio_frames)

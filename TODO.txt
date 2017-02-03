@@ -6,6 +6,7 @@ Outline of system architecture:
 ===================================================================================
 
 TODO
+    - data output has been checking for numpy arrays. Needs to change now that we're using PipelineData.
     - vote tallying aggregator/multiplexer
         - one object holds references to all sources
         - one object manages all features; tallies votes (weighted); assigns output feed

@@ -3,6 +3,7 @@ from collections import namedtuple
 
 PipelineData = namedtuple('PipelineData', ['source_id', 'data'])
 
+
 class PipelineProcess:
     """ This class operates as an intermediate processing point between inputs and outputs. """
 
@@ -14,7 +15,7 @@ class PipelineProcess:
         self._input_sources = sources
 
         self._output_queue = Queue(maxsize=int(drop_output_frames))
-        self._output = None
+        self._output = PipelineData(self.id, None)
 
         self.process = Process(target=target_function,
                                args=[self._input_queue, self._output_queue] + list(params))
@@ -26,6 +27,7 @@ class PipelineProcess:
     def update(self):
         """ Update the inputs and outputs of the function. """
         if self._input_sources:
+            # simultaneous input from all sources via list.
             self._input_queue.put([source.read() for source in self._input_sources])
 
         if self._output_queue.empty():

@@ -17,10 +17,17 @@ class StreamSelector:
             - tally
             - direct output stream
         """
-        votes = [feature.read().data for feature in self.features]
-        assert all(type(vote) == Distribution for vote in votes), '\n'.join([type(vote) for vote in votes])
+        for process in self.inputs.audio + [self.inputs.main_audio] + self.inputs.video + self.features + self.outputs.audio + self.outputs.video:
+            process.update()
 
-        tally = sum(votes)
+        votes = [feature.read().data for feature in self.features]
+
+        assert all(type(vote) == Distribution for vote in votes if vote is not None), '\n'.join([type(vote) for vote in votes])
+
+        tally = sum(vote for vote in votes if vote is not None)
+        if tally == 0:
+            return # no votes yet (common during initialization
+
         max_vote = max(tally, key=lambda v: tally[v])
 
         # TODO

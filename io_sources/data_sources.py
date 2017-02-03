@@ -4,27 +4,10 @@ import sounddevice
 
 from collections import Mapping
 
-from util.pipeline import PipelineProcess
+from util.pipeline import PipelineProcess, PipelineData
 from util.schedule import create_periodic_event
 
-
-class InputSourceTable(Mapping):
-    """ Acts as an immutable storage container for the input sources. """
-
-    def __init__(self, sources_dict, video_audio_id_pairs):
-        self.__sources = sources_dict  # type -> id -> object
-        self.video_audio_map = {video: audio for video, audio in video_audio_id_pairs}
-        self.audio_video_map = {audio: video for video, audio in video_audio_id_pairs}
-
-    def __getitem__(self, item):
-        return self.__sources.__getitem__(item)
-
-    def __iter__(self):
-        return self.__sources.__iter__()
-
-    def __len__(self):
-        return self.__sources.__len__()
-
+from queue import Empty
 
 ###########################################################################################################
 ########################################    STREAMS     ###################################################
@@ -43,17 +26,23 @@ class InputAudioStream(PipelineProcess):
                          drop_output_frames=True)
 
     def update(self):
+        """ Do not update input queue, only output queue. """
         # Note: Could possibly drop frames here if needed.
+        frames = []
+        while True:
+            try:
+                frames.append(self._output_queue.get_nowait())
+            except Empty:
+                break
+
         frame = None
-        while not self._output_queue.empty():
-            new_frame = self._output_queue.get()
-
+        for audio_frame in frames:
             if frame is None:
-                frame = new_frame
+                frame = audio_frame
             else:
-                frame = numpy.append(frame, new_frame)
+                frame = numpy.append(frame, audio_frame)
 
-        self.output_frame = frame
+        self._output = PipelineData(self.id, frame)
 
     @staticmethod
     def stream_audio(input_queue, output_queue, device_id, sample_rate, dtype, interval):
