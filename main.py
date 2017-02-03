@@ -121,7 +121,7 @@ if __name__ == '__main__':
         stream_selector, params = init()
 
         # Initialize scheduler and set to repeat calls indefinitely
-        system = create_periodic_event(interval=1 / 30,
+        system = create_periodic_event(interval=1 / 100,
                                        action=stream_selector.update,
                                        action_args=(),
                                        halt_check=partial(halt_criteria, stream_selector))

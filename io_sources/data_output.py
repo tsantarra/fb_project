@@ -78,8 +78,6 @@ class OutputAudioStream(PipelineProcess):
         stream.start()
 
         def write_audio_frames():
-            frame = None
-
             # collect all data in queue
             frames = []
             while True:
@@ -88,16 +86,24 @@ class OutputAudioStream(PipelineProcess):
                 except Empty:
                     break
 
-            for pipeline_input in frames:
-                if frame is None:
-                    frame = pipeline_input.data
-                    print(frame)
-                else:
-                    frame = numpy.append(frame, pipeline_input.data)
-                    print('appended\n', frame)
+            # concatenate before writing
+            data = tuple(pipeline_input.data for pipeline_input in frames if pipeline_input.data is not None)
+            if len(data) > 1:
+                frame = numpy.concatenate(data)
+            elif len(data) == 1:
+                frame = data[0]
+            else:
+                frame = None
+            if False:
+                for pipeline_input in frames:
+                    if frame is None:
+                        frame = pipeline_input.data
+                    else:
+                        frame = numpy.append(frame, pipeline_input.data)
+                        print('appended\n', frame)
 
             if frame is not None:
-                print('write audio')
+                print('OUTPUT AUDIO')
                 stream.write(frame)
 
 
@@ -172,8 +178,6 @@ class OutputAudioFile(PipelineProcess):
         stream = soundfile.SoundFile(filename, mode='w', samplerate=sample_rate, channels=channels)
 
         def write_audio_frames():
-            frame = None
-
             # collect all data in queue
             frames = []
             while True:
@@ -182,16 +186,24 @@ class OutputAudioFile(PipelineProcess):
                 except Empty:
                     break
 
-            for pipeline_input in frames:
-                if frame is None:
-                    frame = pipeline_input.data
-                    print(frame)
-                else:
-                    frame = numpy.append(frame, pipeline_input.data)
-                    print('appended\n', frame)
+            # concatenate before writing to stream
+            frame = None
+            data = tuple(pipeline_input.data for pipeline_input in frames if pipeline_input.data is not None)
+            if len(data) > 1:
+                frame = numpy.concatenate(data)
+            elif len(data) == 1:
+                frame = data[0]
+            else:
+                frame = None
+            if False:
+                for pipeline_input in frames:
+                    if frame is None:
+                        frame = pipeline_input.data
+                    elif type(pipeline_input.data) == numpy.ndarray:
+                        frame = numpy.append(frame, pipeline_input.data)
 
             if frame is not None:
-                print('write audio')
+                print(frame.dtype)
                 stream.write(frame)
 
         scheduler = create_periodic_event(interval=interval, action=write_audio_frames)
