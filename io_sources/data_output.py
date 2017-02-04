@@ -42,14 +42,15 @@ class OutputVideoStream(PipelineProcess):
 
         def display_video_frame():
             nonlocal last_frame
-            if not input_queue.empty():
-                pipeline_input = input_queue.get()
-
+            try:
+                pipeline_input = input_queue.get_nowait()
                 if type(pipeline_input.data) == numpy.ndarray:
                     last_frame = pipeline_input.data
+            except Empty:
+                pass
 
-                cv2.imshow(stream_id, cv2.resize(last_frame, dimensions, interpolation=cv2.INTER_AREA))
-                cv2.waitKey(1)
+            cv2.imshow(stream_id, cv2.resize(last_frame, dimensions, interpolation=cv2.INTER_AREA))
+            cv2.waitKey(1)
 
         scheduler = create_periodic_event(interval=interval, action=display_video_frame)
         scheduler.run()
@@ -62,8 +63,8 @@ class OutputAudioStream(PipelineProcess):
                          target_function=OutputAudioStream.output_audio,
                          params=(device_id, channels, sample_rate, latency, dtype, interval),
                          sources=[input_stream],
-                         drop_input_frames=True,
-                         drop_output_frames=True)
+                         drop_input_frames=False,
+                         drop_output_frames=False)
 
     def update(self):
         """ Only one source. No output. """
@@ -79,36 +80,17 @@ class OutputAudioStream(PipelineProcess):
 
         def write_audio_frames():
             # collect all data in queue
-            frames = []
             while True:
                 try:
-                    frames.append(input_queue.get_nowait())
+                    frame = input_queue.get_nowait()
+                    if frame.data is not None:
+                        stream.write(frame.data)
                 except Empty:
                     break
 
-            # concatenate before writing
-            data = tuple(pipeline_input.data for pipeline_input in frames if pipeline_input.data is not None)
-            if len(data) > 1:
-                frame = numpy.concatenate(data)
-            elif len(data) == 1:
-                frame = data[0]
-            else:
-                frame = None
-            if False:
-                for pipeline_input in frames:
-                    if frame is None:
-                        frame = pipeline_input.data
-                    else:
-                        frame = numpy.append(frame, pipeline_input.data)
-                        print('appended\n', frame)
-
-            if frame is not None:
-                print('OUTPUT AUDIO')
-                stream.write(frame)
-
-
         scheduler = create_periodic_event(interval=interval, action=write_audio_frames)
         scheduler.run()
+        stream.close()
 
 ###########################################################################################################
 ########################################      FILES     ###################################################
@@ -145,10 +127,12 @@ class OutputVideoFile(PipelineProcess):
 
         def write_video_frames():
             nonlocal last_frame
-            if not input_queue.empty():
-                pipeline_input = input_queue.get()
+            try:
+                pipeline_input = input_queue.get_nowait()
                 if type(pipeline_input.data) == numpy.ndarray:
                     last_frame = pipeline_input.data
+            except Empty:
+                pass
 
             stream.write(cv2.resize(last_frame, dimensions, interpolation=cv2.INTER_AREA))
 
@@ -187,7 +171,6 @@ class OutputAudioFile(PipelineProcess):
                     break
 
             # concatenate before writing to stream
-            frame = None
             data = tuple(pipeline_input.data for pipeline_input in frames if pipeline_input.data is not None)
             if len(data) > 1:
                 frame = numpy.concatenate(data)
@@ -195,15 +178,8 @@ class OutputAudioFile(PipelineProcess):
                 frame = data[0]
             else:
                 frame = None
-            if False:
-                for pipeline_input in frames:
-                    if frame is None:
-                        frame = pipeline_input.data
-                    elif type(pipeline_input.data) == numpy.ndarray:
-                        frame = numpy.append(frame, pipeline_input.data)
 
             if frame is not None:
-                print(frame.dtype)
                 stream.write(frame)
 
         scheduler = create_periodic_event(interval=interval, action=write_audio_frames)

@@ -29,7 +29,6 @@ class AudioFeature(PipelineProcess):
 
             # Initial conditions
             if not last_frames:
-
                 last_frames = {source_id: frame for source_id, frame in input_queue.get()}
                 return
             else:

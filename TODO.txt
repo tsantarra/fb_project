@@ -5,33 +5,18 @@ Outline of system architecture:
 
 ===================================================================================
 
-TODO
-    - data output has been checking for numpy arrays. Needs to change now that we're using PipelineData.
-    - vote tallying aggregator/multiplexer
-        - one object holds references to all sources
-        - one object manages all features; tallies votes (weighted); assigns output feed
-    - flexible initialization (weights, features from config)
 
-Synchronization:
-    - separate processes for input and output need to align
-    - we can drop frames for video, but audio?
-    - transferring between queues is handled in main loop, which results in some extra adds if faster than i/o frequency
-        - in new global clock setup, data will only be transferred once
-    - some tenets to achieve:
-        + all IO should run at the same rate with respect to time (not cycles)
-        + output should not double up on frames written (when input lags)
+TODO
+    - adjust outputs based on voting
+        - thrashing handled in stream selector
+        - have stream selector only change "main" outputs (stream + file)
+    - merged video is synced. Live audio output lags. Drop audio frames?
 
 Halting:
     - current halt criteria is specified as main process window key entry (not output pane, which is separate)
-    - need a better method
-    - also need to determine how to appropriately kill subprocess and release devices
+    - need to determine how to appropriately kill subprocess and release devices
 
 Short-term goals:
-    - synchronization
-        + main loop set on own interval: 0.01
-            - each component has its own interval
-    - split feature calculations into sub-processes
-        + only really necessary if computation is expensive or IO-bound
     - weighted features
     - input streams in one output window (tiled)
     - calibration of audio (so sensitive mics don't dominate)
@@ -40,7 +25,6 @@ Technical info:
     - audio sample rates: 44100 16000
     - dtypes float32 Int16
 
-Found the file problem:
+Distortion problem:
     - sample rate must be agreed upon by input and output devices
     - need to get this information in initialization
-    - read and write updates must be synced, or you can write source.last_frame multiple times

@@ -8,6 +8,8 @@ class StreamSelector:
         self.features = feature_set
         self.outputs = outputs
 
+        self.video_input_map = {stream.id: stream for stream in inputs.video}
+
         self.stream_vote_aggregate = None
 
     def update(self):
@@ -17,7 +19,9 @@ class StreamSelector:
             - tally
             - direct output stream
         """
-        for process in self.inputs.audio + [self.inputs.main_audio] + self.inputs.video + self.features + self.outputs.audio + self.outputs.video:
+        # NOTE: DO NOT UPDATE inputs.main_audio, as it ALREADY UPDATES VIA inputs.audio
+        # update output to input
+        for process in self.outputs.audio + self.outputs.video + self.features + self.inputs.audio  + self.inputs.video:
             process.update()
 
         votes = [feature.read().data for feature in self.features]
@@ -26,11 +30,12 @@ class StreamSelector:
 
         tally = sum(vote for vote in votes if vote is not None)
         if tally == 0:
-            return # no votes yet (common during initialization
+            return  # no votes yet (common during initialization
 
         max_vote = max(tally, key=lambda v: tally[v])
-
-        # TODO
+        print(max_vote)
+        for output_stream in self.outputs.video:
+            output_stream.set_inputs([self.video_input_map[max_vote]])
 
     def start(self):
         # start all sub-processes

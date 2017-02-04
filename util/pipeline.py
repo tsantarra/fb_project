@@ -1,5 +1,6 @@
 from multiprocessing import Process, Queue
 from collections import namedtuple
+from queue import Empty
 
 PipelineData = namedtuple('PipelineData', ['source_id', 'data'])
 
@@ -20,6 +21,9 @@ class PipelineProcess:
         self.process = Process(target=target_function,
                                args=[self._input_queue, self._output_queue] + list(params))
 
+    def set_inputs(self, sources):
+        self._input_sources = sources
+
     def start(self):
         """ Begin the work process. """
         self.process.start()
@@ -30,10 +34,10 @@ class PipelineProcess:
             # simultaneous input from all sources via list.
             self._input_queue.put([source.read() for source in self._input_sources])
 
-        if self._output_queue.empty():
+        try:
+            self._output = PipelineData(self.id, self._output_queue.get_nowait())
+        except Empty:
             self._output = PipelineData(self.id, None)
-        else:
-            self._output = PipelineData(self.id, self._output_queue.get())
 
     def read(self):
         """ Return the latest frame of data. """

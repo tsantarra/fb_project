@@ -91,7 +91,7 @@ def init():
 
     audio_feature = AudioFeature(feature_id='F-Audio', audio_sources=inputs.audio,
                                  audio_video_pair_map=audio_video_pairs)
-    feature_list = [movement_feature, audio_feature]
+    feature_list = [movement_feature]#, audio_feature]
 
     # Initialize stream selector
     stream_selector = StreamSelector(inputs, feature_list, outputs)
@@ -121,7 +121,7 @@ if __name__ == '__main__':
         stream_selector, params = init()
 
         # Initialize scheduler and set to repeat calls indefinitely
-        system = create_periodic_event(interval=1 / 100,
+        system = create_periodic_event(interval=1 / 30,
                                        action=stream_selector.update,
                                        action_args=(),
                                        halt_check=partial(halt_criteria, stream_selector))

@@ -2,8 +2,6 @@ import wave
 import numpy
 import sounddevice
 
-from collections import Mapping
-
 from util.pipeline import PipelineProcess, PipelineData
 from util.schedule import create_periodic_event
 
@@ -22,27 +20,16 @@ class InputAudioStream(PipelineProcess):
                          target_function=InputAudioStream.stream_audio,
                          params=(device_id, sample_rate, dtype, interval),
                          sources=None,
-                         drop_input_frames=True,
-                         drop_output_frames=True)
+                         drop_input_frames=False,
+                         drop_output_frames=False)
 
     def update(self):
         """ Do not update input queue, only output queue. """
-        # Note: Could possibly drop frames here if needed.
-        frames = []
-        while True:
-            try:
-                frames.append(self._output_queue.get_nowait())
-            except Empty:
-                break
-
-        frame = None
-        for audio_frame in frames:
-            if frame is None:
-                frame = audio_frame
-            else:
-                frame = numpy.append(frame, audio_frame)
-
-        self._output = PipelineData(self.id, frame)
+        try:
+            data = self._output_queue.get_nowait()
+            self._output = PipelineData(self.id, data)
+        except Empty:
+            self._output = PipelineData(self.id, None)
 
     @staticmethod
     def stream_audio(input_queue, output_queue, device_id, sample_rate, dtype, interval):
@@ -54,11 +41,35 @@ class InputAudioStream(PipelineProcess):
         stream.start()
 
         def grab_audio_frames():
-            frame, flag = stream.read(stream.read_available)
-            output_queue.put(frame)
+            # Note: Could possibly drop frames here if needed.
+            new_frame, flag = stream.read(stream.read_available)
 
-        scheduler = create_periodic_event(interval=1/30, action=grab_audio_frames)
+            if type(new_frame) != numpy.ndarray:  # No data yet.
+                return
+
+            frames = []
+            while True:
+                try:
+                    frames.append(output_queue.get_nowait())
+                except Empty:
+                    break
+
+            frames.append(new_frame)
+
+            # concatenate before writing
+            if len(frames) > 1:
+                frame = numpy.concatenate(frames)
+            elif len(frames) == 1:
+                frame = frames[0]
+            else:
+                frame = None
+
+            if frame is not None:
+                output_queue.put(frame)
+
+        scheduler = create_periodic_event(interval=interval, action=grab_audio_frames)
         scheduler.run()
+        stream.close()
 
 
 class InputVideoStream(PipelineProcess):
@@ -108,17 +119,11 @@ class InputAudioFile(PipelineProcess):
                          drop_output_frames=False)
 
     def update(self):
-        # Note: Could possibly drop frames here if needed.
-        frame = None
-        while not self._output_queue.empty():
-            new_frame, flag, status = self._output_queue.get()
-
-            if frame is None:
-                frame = new_frame
-            else:
-                frame = numpy.append(frame, new_frame)
-
-        self.output_frame = frame
+        """ Do not update input queue, only output queue. """
+        try:
+            self._output = PipelineData(self.id, self._output_queue.get_nowait())
+        except Empty:
+            self._output = PipelineData(self.id, None)
 
     @staticmethod
     def read_from_file(input_queue, output_queue, filename, interval):
@@ -133,7 +138,26 @@ class InputAudioFile(PipelineProcess):
             # raw-numpy-array-from-real-time-network-audio-stream-in-python
             raw_data = stream.readframes(nframes=chunk_size)
             numpy_array = numpy.fromstring(raw_data, '<h')
-            output_queue.put(numpy_array)
+
+            # Go ahead and merge waiting outgoing frames.
+            frames = []
+            while True:
+                try:
+                    frames.append(output_queue.get_nowait())
+                except Empty:
+                    break
+
+            frames.append(numpy_array)
+
+            # concatenate before writing
+            if len(frames) > 1:
+                frame = numpy.concatenate(frames)
+            elif len(frames) == 1:
+                frame = frames[0]
+            else:
+                frame = None
+
+            output_queue.put(frame)
 
         scheduler = create_periodic_event(interval=interval, action=read_frames)
         scheduler.run()
