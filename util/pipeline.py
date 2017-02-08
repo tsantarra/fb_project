@@ -5,6 +5,22 @@ from queue import Empty
 PipelineData = namedtuple('PipelineData', ['source_id', 'data'])
 
 
+def get_from_queue(queue):
+    try:
+        return queue.get_nowait()
+    except Empty:
+        return None
+
+
+def get_all_from_queue(queue):
+    data = []
+    while True:
+        try:
+            data.append(queue.get_nowait())
+        except Empty:
+            return data
+
+
 class PipelineProcess:
     """ This class operates as an intermediate processing point between inputs and outputs. """
 
@@ -18,26 +34,23 @@ class PipelineProcess:
         self._output_queue = Queue(maxsize=int(drop_output_frames))
         self._output = PipelineData(self.id, None)
 
-        self.process = Process(target=target_function,
-                               args=[self._input_queue, self._output_queue] + list(params))
+        self._process = Process(target=target_function,
+                                args=[self._input_queue, self._output_queue] + list(params))
 
     def set_inputs(self, sources):
         self._input_sources = sources
 
     def start(self):
         """ Begin the work process. """
-        self.process.start()
+        self._process.start()
 
     def update(self):
         """ Update the inputs and outputs of the function. """
         if self._input_sources:
-            # simultaneous input from all sources via list.
+            # simultaneous input from all sources
             self._input_queue.put([source.read() for source in self._input_sources])
 
-        try:
-            self._output = PipelineData(self.id, self._output_queue.get_nowait())
-        except Empty:
-            self._output = PipelineData(self.id, None)
+        self._output = PipelineData(self.id, get_from_queue(self._output_queue))
 
     def read(self):
         """ Return the latest frame of data. """
@@ -45,4 +58,4 @@ class PipelineProcess:
 
     def close(self):
         """ End the work process. """
-        self.process.terminate()
+        self._process.terminate()

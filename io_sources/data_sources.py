@@ -1,11 +1,11 @@
 import wave
+from queue import Full
+
 import numpy
 import sounddevice
 
-from util.pipeline import PipelineProcess, PipelineData
+from util.pipeline import PipelineProcess, PipelineData, get_all_from_queue
 from util.schedule import create_periodic_event
-
-from queue import Empty
 
 ###########################################################################################################
 ########################################    STREAMS     ###################################################
@@ -20,16 +20,7 @@ class InputAudioStream(PipelineProcess):
                          target_function=InputAudioStream.stream_audio,
                          params=(device_id, sample_rate, dtype, interval),
                          sources=None,
-                         drop_input_frames=False,
                          drop_output_frames=False)
-
-    def update(self):
-        """ Do not update input queue, only output queue. """
-        try:
-            data = self._output_queue.get_nowait()
-            self._output = PipelineData(self.id, data)
-        except Empty:
-            self._output = PipelineData(self.id, None)
 
     @staticmethod
     def stream_audio(input_queue, output_queue, device_id, sample_rate, dtype, interval):
@@ -47,13 +38,7 @@ class InputAudioStream(PipelineProcess):
             if type(new_frame) != numpy.ndarray:  # No data yet.
                 return
 
-            frames = []
-            while True:
-                try:
-                    frames.append(output_queue.get_nowait())
-                except Empty:
-                    break
-
+            frames = get_all_from_queue(output_queue)
             frames.append(new_frame)
 
             # concatenate before writing
@@ -80,7 +65,6 @@ class InputVideoStream(PipelineProcess):
                          target_function=InputVideoStream.stream_video,
                          params=(device_id, input_interval),
                          sources=None,
-                         drop_input_frames=True,
                          drop_output_frames=True)
 
     @staticmethod
@@ -115,22 +99,14 @@ class InputAudioFile(PipelineProcess):
                          target_function=InputAudioFile.read_from_file,
                          params=(filename, interval),
                          sources=None,
-                         drop_input_frames=False,
                          drop_output_frames=False)
-
-    def update(self):
-        """ Do not update input queue, only output queue. """
-        try:
-            self._output = PipelineData(self.id, self._output_queue.get_nowait())
-        except Empty:
-            self._output = PipelineData(self.id, None)
 
     @staticmethod
     def read_from_file(input_queue, output_queue, filename, interval):
         stream = wave.open(filename, 'rb')
 
         frames_per_second = stream.getframerate()
-        chunk_size = interval*frames_per_second
+        chunk_size = int(interval*frames_per_second)
 
         def read_frames():
             # for compatibility with sound device output, need numpy array
@@ -139,14 +115,8 @@ class InputAudioFile(PipelineProcess):
             raw_data = stream.readframes(nframes=chunk_size)
             numpy_array = numpy.fromstring(raw_data, '<h')
 
-            # Go ahead and merge waiting outgoing frames.
-            frames = []
-            while True:
-                try:
-                    frames.append(output_queue.get_nowait())
-                except Empty:
-                    break
-
+            # Collect all frames
+            frames = get_all_from_queue(output_queue)
             frames.append(numpy_array)
 
             # concatenate before writing
@@ -168,22 +138,34 @@ class InputVideoFile(PipelineProcess):
     def __init__(self, filename, interval=1/30):
         self.source_id = filename
         super().__init__(pipeline_id='VF-' + filename,
-                         target_function=InputVideoFile.read_file(),
+                         target_function=InputVideoFile.read_file,
                          params=(filename, interval),
                          sources=None,
-                         drop_input_frames=False,
-                         drop_output_frames=False)
+                         drop_output_frames=True)
 
     @staticmethod
     def read_file(input_queue, output_queue, filename, interval):
-        import cv2
+        import cv2, time
         stream = cv2.VideoCapture(filename)
-        # frame_rate = stream.get(cv2.CAP_PROP_FPS)
+        frame_rate = stream.get(cv2.CAP_PROP_FPS)
+
+        assert frame_rate <= 1/interval, 'Frame rate of video input greater than sample rate. FPS: ' + str(frame_rate)
+        adjust_factor = 1.0 - frame_rate*interval  #(1/interval)/frame_rate - 1.0
 
         def read_frame():
+            # Occasionally skip reading a frame
+            nonlocal adjust_factor
+            if time.clock() % 1 < adjust_factor:
+                return
+
             status, frame = stream.read()
             if status:
-                output_queue.put(status, frame)
+                try:
+                    output_queue.put_nowait(frame)
+                except Full:
+                    return
 
         scheduler = create_periodic_event(interval=interval, action=read_frame)
         scheduler.run()
+
+

@@ -64,6 +64,20 @@ class Distribution(dict):
         else:
             return self.__add__(other)
 
+    def __mul__(self, num):
+        """ Scale all values up by a given factor. """
+        assert type(num) == float or type(num) == int, 'Incorrect use of product between Distribution and ' + str(type(num))
+
+        new_dist = Distribution()
+        for key, value in self.items():
+            new_dist[key] = value * num
+
+        return new_dist
+
+    def __rmul__(self, num):
+        """ Scale all values up by a given factor. """
+        return self.__mul__(num)
+
     def normalize(self):
         """
         Normalizes the distribution such that all probabilities sum to 1.
@@ -72,7 +86,7 @@ class Distribution(dict):
 
         assert total > 0, 'Distribution probability total = 0.'
 
-        for item in self.keys():
+        for item in self:
             self[item] /= total
 
         return self

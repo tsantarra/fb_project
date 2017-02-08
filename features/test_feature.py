@@ -1,5 +1,5 @@
 from util.distribution import Distribution
-from util.pipeline import PipelineProcess
+from util.pipeline import PipelineProcess, get_from_queue
 from util.schedule import create_periodic_event
 
 
@@ -19,7 +19,6 @@ class TestFeature(PipelineProcess):
     @staticmethod
     def establish_process_loop(input_queue, output_queue, audio_video_pairs):
         """ This function is passed to a separate python process with shared input and output queues. """
-
         # State variables to be reference by repeated process.
         video_ids = [pair[1] for pair in audio_video_pairs]
 
@@ -30,6 +29,9 @@ class TestFeature(PipelineProcess):
             # via action_args in create_periodic_event, but the variables must be mutable to accept
             # any changes.
             nonlocal video_ids
+
+            # Input data for feature calculation
+            input_data = get_from_queue(input_queue)
 
             # Output vote distribution via the output_queue.
             vote = Distribution({vid_id: 0.0 for vid_id in video_ids})

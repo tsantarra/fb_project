@@ -7,18 +7,23 @@ Outline of system architecture:
 
 
 TODO
-    - adjust outputs based on voting
-        - thrashing handled in stream selector
-        - have stream selector only change "main" outputs (stream + file)
-    - merged video is synced. Live audio output lags. Drop audio frames?
+    Synchronization
+        - in live mode (and possibly in file mode too), dragging windows causes desync
+        - audio and video files do not line up in file mode. Video lags audio.
+            - cough at 1:32 on Closeup2
+            - output cough at
+                - 1:32 audio
+                - 1:46 video
+            - file fps = 25
+
+            - found problem: queue.put blocks by default
+                - when disabled, video gets ahead of audio now
 
 Halting:
     - current halt criteria is specified as main process window key entry (not output pane, which is separate)
     - need to determine how to appropriately kill subprocess and release devices
 
 Short-term goals:
-    - weighted features
-    - input streams in one output window (tiled)
     - calibration of audio (so sensitive mics don't dominate)
 
 Technical info:
@@ -27,4 +32,3 @@ Technical info:
 
 Distortion problem:
     - sample rate must be agreed upon by input and output devices
-    - need to get this information in initialization

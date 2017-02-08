@@ -7,23 +7,23 @@ def get_camera_list():
         list of active devices. There is likely a better way than iterating through
         possible device IDs and trying each.
     """
-    id = 0
+    id_num = 0
     cam_list = []
 
     while True:
-        stream = cv2.VideoCapture(id)
+        stream = cv2.VideoCapture(id_num)
         if stream.isOpened():
             # Check stream features
             ret, frame = stream.read()
             height, width, layers = frame.shape
-            print('Stream id:', id)
+            print('Stream id:', id_num)
             print('\tHeight: {} Width: {} Layers: {}'.format(height, width, layers))
             print('\tStatus:', ret)
 
             # Release and log id
             stream.release()
-            cam_list.append(id)
-            id += 1
+            cam_list.append(id_num)
+            id_num += 1
         else:
             stream.release()
             break
