@@ -5,6 +5,12 @@ Outline of system architecture:
 
 ===================================================================================
 
+Inputs                          Outputs
+Files                           Files
+Live cams                       Life cams
+                                Features
+
+Let receiver decide to drop. Never drop on output.
 
 TODO
     Synchronization

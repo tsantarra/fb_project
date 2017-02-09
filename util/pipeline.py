@@ -1,3 +1,4 @@
+from itertools import zip_longest
 from multiprocessing import Process, Queue
 from collections import namedtuple
 from queue import Empty
@@ -28,16 +29,17 @@ class PipelineProcess:
         """ Initialize the synchronized objects and work process. """
         self.id = pipeline_id
 
-        self._input_queue = Queue(maxsize=int(drop_input_frames))
         self._input_sources = sources
+        self._input_queue = Queue(maxsize=int(drop_input_frames))
 
-        self._output_queue = Queue(maxsize=int(drop_output_frames))
         self._output = PipelineData(self.id, None)
+        self._output_queue = Queue(maxsize=int(drop_output_frames))
 
         self._process = Process(target=target_function,
                                 args=[self._input_queue, self._output_queue] + list(params))
 
     def set_inputs(self, sources):
+        """ Overwrites the input sources. Used for changing pipeline structure live. """
         self._input_sources = sources
 
     def start(self):

@@ -65,7 +65,7 @@ class InputVideoStream(PipelineProcess):
                          target_function=InputVideoStream.stream_video,
                          params=(device_id, input_interval),
                          sources=None,
-                         drop_output_frames=True)
+                         drop_output_frames=False)
 
     @staticmethod
     def stream_video(input_queue, output_queue, device_id, interval):
@@ -141,7 +141,7 @@ class InputVideoFile(PipelineProcess):
                          target_function=InputVideoFile.read_file,
                          params=(filename, interval),
                          sources=None,
-                         drop_output_frames=True)
+                         drop_output_frames=False)
 
     @staticmethod
     def read_file(input_queue, output_queue, filename, interval):
