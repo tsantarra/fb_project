@@ -2,7 +2,7 @@ import numpy
 import sounddevice
 import soundfile
 
-from util.pipeline import PipelineProcess, get_from_queue, get_all_from_queue, PipelineData
+from util.pipeline import PipelineProcess, get_from_queue, get_all_from_queue, PipelineOutput
 from util.schedule import create_periodic_event
 
 
@@ -38,12 +38,14 @@ class OutputVideoStream(PipelineProcess):
         def display_video_frame():
             nonlocal last_frame
 
-            pipeline_input = get_from_queue(input_queue)
-            if type(pipeline_input) == PipelineData and type(pipeline_input.data) == numpy.ndarray:
-                last_frame = pipeline_input.data
+            queue_input = get_all_from_queue(input_queue)
+            for slice in queue_input:
+                for pipeline_input in slice:
+                    if type(pipeline_input) == PipelineOutput and type(pipeline_input.data) == numpy.ndarray:
+                        last_frame = pipeline_input.data
 
-            cv2.imshow(stream_id, cv2.resize(last_frame, dimensions, interpolation=cv2.INTER_AREA))
-            cv2.waitKey(1)
+                        cv2.imshow(stream_id, cv2.resize(last_frame, dimensions, interpolation=cv2.INTER_AREA))
+                        cv2.waitKey(0)
 
         scheduler = create_periodic_event(interval=interval, action=display_video_frame)
         scheduler.run()
@@ -56,7 +58,7 @@ class OutputTiledVideoStream(PipelineProcess):
                          target_function=OutputTiledVideoStream.show_video,
                          params=(stream_id, len(inputs), dimensions, interval),
                          sources=inputs,
-                         drop_input_frames=True)
+                         drop_input_frames=False)
 
     def read(self):
         raise ReadFromOutputException('Attempted read from an output pipeline function.' + str(self.__class__))
@@ -71,15 +73,21 @@ class OutputTiledVideoStream(PipelineProcess):
         def display_video_frame():
             nonlocal last_frames, scale_factor, height, width
             # Get inputs, checking for appropriate number.
-            pipeline_input = get_from_queue(input_queue)
-            if pipeline_input:
-                assert len(pipeline_input) == num_inputs or len(pipeline_input) == 0, \
-                    'Incorrect number of inputs. Got: ' + str(len(pipeline_input)) + ' Expected: ' + str(num_inputs)
+            queue_input = get_all_from_queue(input_queue)
+            for slice in queue_input:
+                assert len(slice) == num_inputs, \
+                'Incorrect number of inputs. Got: ' + str(len(slice)) + ' Expected: ' + str(num_inputs)
 
-                if len(pipeline_input) > 0:
-                    last_frames = [new_frame.data
-                                   if new_frame.data is not None else last_frame
-                                   for new_frame, last_frame in zip(pipeline_input, last_frames)]
+                new_frames = []
+                for input_slice, input_last_frame in zip(slice, last_frames):
+                    for pipeline_input in input_slice[::-1]:
+                        if pipeline_input.data is not None:
+                            new_frames.append(pipeline_input.data)
+                            break
+                    else:
+                        new_frames.append(input_last_frame)
+
+                last_frames = new_frames
 
             # Resize frames
             frames = [cv2.resize(frame, (height, width), interpolation=cv2.INTER_AREA) for frame in last_frames]
@@ -95,7 +103,7 @@ class OutputTiledVideoStream(PipelineProcess):
 
             # Display
             cv2.imshow(stream_id, combined)
-            cv2.waitKey(1)
+            cv2.waitKey(0)
 
         scheduler = create_periodic_event(interval=interval, action=display_video_frame)
         scheduler.run()
@@ -127,9 +135,10 @@ class OutputAudioStream(PipelineProcess):
             queue_input = get_all_from_queue(input_queue)
 
             # Output each frame.
-            for pipeline_input in queue_input:
-                if pipeline_input.data is not None:
-                    stream.write(pipeline_input.data)
+            for slice in queue_input:
+                for pipeline_input in slice:
+                    if pipeline_input.data is not None:
+                        stream.write(pipeline_input.data)
 
         scheduler = create_periodic_event(interval=interval, action=write_audio_frames)
         scheduler.run()
@@ -171,11 +180,12 @@ class OutputVideoFile(PipelineProcess):
         def write_video_frames():
             nonlocal last_frame
 
-            pipeline_input = get_from_queue(input_queue)
-            if type(pipeline_input) == PipelineData and type(pipeline_input.data) == numpy.ndarray:
-                last_frame = pipeline_input.data
-
-            stream.write(cv2.resize(last_frame, dimensions, interpolation=cv2.INTER_AREA))
+            queue_input = get_all_from_queue(input_queue)
+            for slice in queue_input:
+                for pipeline_input in slice:
+                    if type(pipeline_input) == PipelineOutput and type(pipeline_input.data) == numpy.ndarray:
+                        last_frame = pipeline_input.data
+                        stream.write(cv2.resize(last_frame, dimensions, interpolation=cv2.INTER_AREA))
 
         scheduler = create_periodic_event(interval=1.0/video_fps, action=write_video_frames)
         scheduler.run()
@@ -208,17 +218,11 @@ class OutputAudioFile(PipelineProcess):
             if not queue_input:
                 return
 
-            # concatenate before writing to stream
-            data = tuple(pipeline_input.data for pipeline_input in queue_input if pipeline_input.data is not None)
-            if len(data) > 1:
-                frame = numpy.concatenate(data)
-            elif len(data) == 1:
-                frame = data[0]
-            else:
-                frame = None
+            for slice in queue_input:
+                for pipeline_input in slice:
+                    if pipeline_input and pipeline_input.data is not None:
+                        stream.write(pipeline_input.data)
 
-            if frame is not None:
-                stream.write(frame)
 
         scheduler = create_periodic_event(interval=interval, action=write_audio_frames)
         scheduler.run()

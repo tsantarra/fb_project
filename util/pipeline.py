@@ -3,7 +3,7 @@ from multiprocessing import Process, Queue
 from collections import namedtuple
 from queue import Empty
 
-PipelineData = namedtuple('PipelineData', ['source_id', 'data'])
+PipelineOutput = namedtuple('PipelineOutput', ['source_id', 'data'])
 
 
 def get_from_queue(queue):
@@ -32,7 +32,7 @@ class PipelineProcess:
         self._input_sources = sources
         self._input_queue = Queue(maxsize=int(drop_input_frames))
 
-        self._output = PipelineData(self.id, None)
+        self._output = [PipelineOutput(self.id, None)]
         self._output_queue = Queue(maxsize=int(drop_output_frames))
 
         self._process = Process(target=target_function,
@@ -52,7 +52,11 @@ class PipelineProcess:
             # simultaneous input from all sources
             self._input_queue.put([source.read() for source in self._input_sources])
 
-        self._output = PipelineData(self.id, get_from_queue(self._output_queue))
+        output_data = get_all_from_queue(self._output_queue)
+        if output_data:
+            self._output = [PipelineOutput(self.id, data) for data in output_data]
+        else:
+            self._output = [PipelineOutput(self.id, None)]
 
     def read(self):
         """ Return the latest frame of data. """

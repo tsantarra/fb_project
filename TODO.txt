@@ -13,6 +13,8 @@ Live cams                       Life cams
 Let receiver decide to drop. Never drop on output.
 
 TODO
+    Output file should keep track of time/frames written too.
+
     Synchronization
         - in live mode (and possibly in file mode too), dragging windows causes desync
         - audio and video files do not line up in file mode. Video lags audio.
@@ -38,3 +40,12 @@ Technical info:
 
 Distortion problem:
     - sample rate must be agreed upon by input and output devices
+
+
+
+            input_data = [source.read() for source in self._input_sources]
+            source_ids = [source.id for source in self._input_sources]
+
+            for input_frames in zip_longest(*input_data):
+                self._input_queue.put([input if input is not None else PipelineOutput(source_ids[index], None)
+                                       for index, input in enumerate(input_frames)])

@@ -4,7 +4,7 @@ from queue import Full
 import numpy
 import sounddevice
 
-from util.pipeline import PipelineProcess, PipelineData, get_all_from_queue
+from util.pipeline import PipelineProcess, PipelineOutput, get_all_from_queue
 from util.schedule import create_periodic_event
 
 ###########################################################################################################
@@ -37,6 +37,9 @@ class InputAudioStream(PipelineProcess):
 
             if type(new_frame) != numpy.ndarray:  # No data yet.
                 return
+
+            output_queue.put(new_frame)
+            return
 
             frames = get_all_from_queue(output_queue)
             frames.append(new_frame)
@@ -103,17 +106,29 @@ class InputAudioFile(PipelineProcess):
 
     @staticmethod
     def read_from_file(input_queue, output_queue, filename, interval):
+        import time, math
         stream = wave.open(filename, 'rb')
 
         frames_per_second = stream.getframerate()
         chunk_size = int(interval*frames_per_second)
+        start_time = time.clock()
+        chunks_processed = 0
 
         def read_frames():
-            # for compatibility with sound device output, need numpy array
-            # source: http://stackoverflow.com/questions/30550212/
-            # raw-numpy-array-from-real-time-network-audio-stream-in-python
-            raw_data = stream.readframes(nframes=chunk_size)
-            numpy_array = numpy.fromstring(raw_data, '<h')
+            nonlocal frames_per_second, chunk_size, start_time, stream, chunks_processed
+            chunks_to_go = math.floor((time.clock() - start_time)/interval) - chunks_processed
+            for _ in range(chunks_to_go):
+                # for compatibility with sound device output, need numpy array
+                # source: http://stackoverflow.com/questions/30550212/
+                # raw-numpy-array-from-real-time-network-audio-stream-in-python
+                raw_data = stream.readframes(nframes=chunk_size)
+                numpy_array = numpy.fromstring(raw_data, '<h')
+
+                output_queue.put(numpy_array)
+                chunks_processed += 1
+
+            return
+
 
             # Collect all frames
             frames = get_all_from_queue(output_queue)
@@ -140,30 +155,27 @@ class InputVideoFile(PipelineProcess):
         super().__init__(pipeline_id='VF-' + filename,
                          target_function=InputVideoFile.read_file,
                          params=(filename, interval),
-                         sources=None,
-                         drop_output_frames=False)
+                         sources=None)
 
     @staticmethod
     def read_file(input_queue, output_queue, filename, interval):
-        import cv2, time
+        import cv2, time, math
         stream = cv2.VideoCapture(filename)
         frame_rate = stream.get(cv2.CAP_PROP_FPS)
+        frames_processed = 0
 
-        assert frame_rate <= 1/interval, 'Frame rate of video input greater than sample rate. FPS: ' + str(frame_rate)
-        adjust_factor = 1.0 - frame_rate*interval  #(1/interval)/frame_rate - 1.0
+        start_time = time.clock()
 
         def read_frame():
             # Occasionally skip reading a frame
-            nonlocal adjust_factor
-            if time.clock() % 1 < adjust_factor:
-                return
+            nonlocal stream, frame_rate, frames_processed, start_time
 
-            status, frame = stream.read()
-            if status:
-                try:
-                    output_queue.put_nowait(frame)
-                except Full:
-                    return
+            frames_to_go = math.floor(frame_rate * (time.clock() - start_time)) - frames_processed
+            for _ in range(frames_to_go):
+                status, frame = stream.read()
+                if status:
+                    output_queue.put(frame)
+                    frames_processed += 1
 
         scheduler = create_periodic_event(interval=interval, action=read_frame)
         scheduler.run()
