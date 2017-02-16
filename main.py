@@ -3,11 +3,10 @@ import configparser
 import logging
 import sys
 import traceback
+import cv2
 
 from collections import namedtuple
 from functools import partial
-
-import cv2
 from numpy import zeros
 
 from features.audio_feature import AudioFeature
