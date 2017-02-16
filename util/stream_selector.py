@@ -1,9 +1,9 @@
-from collections import Counter
-
 from util.distribution import Distribution
 
 
 class StreamSelector:
+    """ This class is responsible for aggregating the feature votes and changing output streams. """
+
     def __init__(self, inputs, weighted_feature_distribution, outputs, thrash_limit=30):
         self.inputs = inputs
         self.features = list(weighted_feature_distribution.keys())
@@ -28,6 +28,7 @@ class StreamSelector:
             - tally
             - direct output stream
         """
+        # Moved start call to first update loop.
         if not self.started:
             self.start()
 
@@ -36,9 +37,14 @@ class StreamSelector:
             process.update()
 
         # Read in votes. Check votes for appropriate type.
-        votes = {feature: feature.read().data for feature in self.features}
-        assert all(type(vote) == Distribution for vote in votes.values() if vote is not None), '\n'.join(
-            [type(vote) for vote in votes])
+        votes = {}
+        for feature in self.features:
+            votes_output = feature.read()
+            if votes_output:
+                votes[feature] = votes_output[-1]  # in the event of multiple votes queued, just take most recent.
+
+        assert all(type(vote) == Distribution for vote in votes.values() if vote is not None), \
+            'Vote types:' + '\n'.join([type(vote) for vote in votes])
 
         # Tally votes.
         tally = sum(vote * self.feature_weights[feature] for feature, vote in votes.items() if vote is not None)
@@ -51,7 +57,7 @@ class StreamSelector:
         # Consideration for thrashing. Only switch if same stream selected for > thrash_limit cycles.
         self.time_since_switch += 1
         if self.last_selected is None or \
-            (max_vote != self.last_selected and self.time_since_switch > self.thrash_limit):
+                (max_vote != self.last_selected and self.time_since_switch > self.thrash_limit):
             self.last_selected = max_vote
             self.time_since_switch = 0
 
@@ -63,6 +69,7 @@ class StreamSelector:
         # start all sub-processes
         for process in self._all_input_output:
             process.start()
+
         self.started = True
 
     def close(self):

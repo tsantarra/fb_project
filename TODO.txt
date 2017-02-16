@@ -5,27 +5,10 @@ Outline of system architecture:
 
 ===================================================================================
 
-Inputs                          Outputs
-Files                           Files
-Live cams                       Life cams
-                                Features
-
-Let receiver decide to drop. Never drop on output.
 
 TODO
-    Output file should keep track of time/frames written too.
-
-    Synchronization
-        - in live mode (and possibly in file mode too), dragging windows causes desync
-        - audio and video files do not line up in file mode. Video lags audio.
-            - cough at 1:32 on Closeup2
-            - output cough at
-                - 1:32 audio
-                - 1:46 video
-            - file fps = 25
-
-            - found problem: queue.put blocks by default
-                - when disabled, video gets ahead of audio now
+    - clean up files
+    - complete documentation
 
 Halting:
     - current halt criteria is specified as main process window key entry (not output pane, which is separate)
@@ -37,15 +20,4 @@ Short-term goals:
 Technical info:
     - audio sample rates: 44100 16000
     - dtypes float32 Int16
-
-Distortion problem:
-    - sample rate must be agreed upon by input and output devices
-
-
-
-            input_data = [source.read() for source in self._input_sources]
-            source_ids = [source.id for source in self._input_sources]
-
-            for input_frames in zip_longest(*input_data):
-                self._input_queue.put([input if input is not None else PipelineOutput(source_ids[index], None)
-                                       for index, input in enumerate(input_frames)])
+    - sample rate must be agreed upon by input and output devices; otherwise, distortion occurs

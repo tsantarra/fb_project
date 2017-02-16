@@ -72,7 +72,7 @@ def init():
                                               input_stream=main_audio_input, sample_rate=global_sample_rate,
                                               dtype=global_dtype)]
 
-    #output_video_streams = [OutputVideoStream(stream_id=input_stream.id, input_stream=input_stream)
+    # output_video_streams = [OutputVideoStream(stream_id=input_stream.id, input_stream=input_stream)
     #                        for input_stream in input_video]
     output_video_streams = [OutputTiledVideoStream(stream_id='Input Streams', inputs=input_video)]
 
@@ -86,7 +86,7 @@ def init():
 
     if parameters['OUTPUT_VIDEO']['video_file']:
         output_video_file = OutputVideoFile(filename=parameters['OUTPUT_VIDEO']['video_filename'],
-                                                    input_stream=input_video[0])
+                                            input_stream=input_video[0])
         output_video_streams.append(output_video_file)
         main_video_outputs.append(output_video_file)
 
@@ -104,18 +104,17 @@ def init():
     return StreamSelector(inputs, weighted_feature_distribution, outputs), parameters
 
 
-def halt_check(selector):
+def halt_check(selector, image=zeros((30, 30, 3))):
     """ This function provides the necessary check for terminating the system loop. """
     # display blank image
-    cv2.imshow('Exit', zeros((30, 30, 3)))
+    cv2.imshow('Exit', image)
 
     # Check for end key press (esc)
-    end = (cv2.waitKey(10) == 27)
+    end = (cv2.waitKey(1) == 27)
     if end:
         selector.close()
 
     return end
-
 
 if __name__ == '__main__':
     logging.basicConfig(filename=__file__[:-3] + '.log', filemode='w', level=logging.DEBUG)
@@ -135,7 +134,7 @@ if __name__ == '__main__':
 
         # Kill windows
         cv2.destroyAllWindows()
-        cv2.waitKey(0)
+        cv2.waitKey(1)
 
         # Create mixed audio/video file
         if params['OUTPUT_AUDIO']['audio_file'] and params['OUTPUT_VIDEO']['video_file']:

@@ -46,10 +46,6 @@ class Distribution(dict):
         """
         Sums two distributions across keys.
         """
-        #assert self.keys() == other_distribution.keys(), \
-        #    'Conditional probabilities keys do not map to distribution.\n' + \
-        #    str(set(other_distribution.keys())) + ' != ' + str(self.keys())
-
         new_dist = Distribution()
 
         for key in self.keys() | other_distribution.keys():
@@ -83,7 +79,6 @@ class Distribution(dict):
         Normalizes the distribution such that all probabilities sum to 1.
         """
         total = sum(self.values())
-
         assert total > 0, 'Distribution probability total = 0.'
 
         for item in self:
@@ -108,7 +103,7 @@ class Distribution(dict):
         return item
 
     def __repr__(self):
-        return '\nDistribution {\n' + '\n'.join(str(key) + '\n\tP=' + str(val) + '\n' for key, val in self.items()) + '}'
+        return 'Distribution { ' + ' '.join(str(key) + ' P=' + str(val) + ' ' for key, val in self.items()) + '}'
 
     def __missing__(self, key):
         self[key] = 0.0
